@@ -4,8 +4,10 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
-import { Check, FileText, Film, Loader2, Sparkles, Upload, X } from "lucide-react";
+import { Check, FileText, Loader2, Sparkles, Upload, X } from "lucide-react";
 import GeminiChip from "@/components/GeminiChip";
+import ComputeOptions, { ComputeBreakdown } from "@/components/gigs/ComputeOptions";
+import DatasetUpload from "@/components/gigs/DatasetUpload";
 import Mono from "@/components/Mono";
 import PageContainer from "@/components/PageContainer";
 import PageHeader from "@/components/PageHeader";
@@ -15,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createGig, getCurrentUser } from "@/lib/api";
+import { COMPUTE_PROVIDERS, estimateCompute } from "@/lib/compute";
 import { formatMoney, pad2 } from "@/lib/format";
 import { SPECIALTY_META } from "@/lib/labels";
 import { cn } from "@/lib/utils";
@@ -25,7 +28,7 @@ Transfer 100 µL from B1 to B2
 Dispense into B2 and mix 3x`;
 
 // Shown while the gig is created, so the audience sees what Gemini is doing.
-const PIPELINE_STEPS = ["Uploading video", "Gemini segments the video", "Aligning segments to SOP steps", "Creating expert tasks"];
+const PIPELINE_STEPS = ["Uploading dataset", "Gemini segments every video", "Aligning segments to SOP steps", "Creating expert tasks"];
 
 export default function CreateGigPage() {
   const router = useRouter();
@@ -34,12 +37,16 @@ export default function CreateGigPage() {
   const [specialty, setSpecialty] = useState("lab_technician");
   const [pay, setPay] = useState("12");
   const [raters, setRaters] = useState("2");
-  const [video, setVideo] = useState(null);
+  const [videos, setVideos] = useState([]);
+  const [provider, setProvider] = useState("gcp");
   const [sopFile, setSopFile] = useState(null);
   const [pipelineStep, setPipelineStep] = useState(null);
 
   const sopSteps = sopText.split("\n").map((s) => s.trim()).filter(Boolean);
-  const canSubmit = title.trim() && sopSteps.length > 0 && video && pipelineStep == null;
+  const canSubmit = title.trim() && sopSteps.length > 0 && videos.length > 0 && pipelineStep == null;
+  const expertCost = (Number(pay) || 0) * Number(raters) * videos.length;
+  const providerMeta = COMPUTE_PROVIDERS.find((p) => p.id === provider);
+  const computeCost = videos.length ? estimateCompute(providerMeta, videos).total : 0;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -53,7 +60,8 @@ export default function CreateGigPage() {
     form.set("required_specialty", specialty);
     form.set("pay_per_task", pay);
     form.set("raters_required", raters);
-    form.set("video", video);
+    videos.forEach((v) => form.append("videos", v.file));
+    form.set("compute_provider", provider);
     if (sopFile) form.set("sop", sopFile);
 
     setPipelineStep(0);
@@ -62,7 +70,7 @@ export default function CreateGigPage() {
       const [gig] = await Promise.all([createGig(form), new Promise((r) => setTimeout(r, PIPELINE_STEPS.length * 650))]);
       clearInterval(ticker);
       setPipelineStep(PIPELINE_STEPS.length);
-      toast.success("Gig is live", { description: "Gemini pre-segmented the video. Experts can start now." });
+      toast.success("Gig is live", { description: `Gemini pre-segmented ${videos.length} ${videos.length === 1 ? "video" : "videos"}. Experts can start now.` });
       router.push(`/company/gigs/${gig.id}`);
     } catch (err) {
       clearInterval(ticker);
@@ -76,7 +84,7 @@ export default function CreateGigPage() {
       <PageHeader
         eyebrow="Gigs / new"
         title="Create a gig"
-        description="Upload a lab video and its SOP. Gemini pre-segments the video so experts correct instead of starting from scratch."
+        description="Upload a lab video dataset and its SOP. Gemini pre-segments every video so experts correct instead of starting from scratch."
         meta={<GeminiChip>Auto pre-annotation</GeminiChip>}
       />
 
@@ -121,15 +129,12 @@ export default function CreateGigPage() {
             </div>
           </Section>
 
-          <Section title="Lab video">
-            <FileDrop
-              accept="video/*"
-              icon={Film}
-              file={video}
-              onFile={setVideo}
-              prompt="Drop a lab video or click to browse"
-              hint="MP4 or MOV. Demo videos use cached Gemini results, so this is instant."
-            />
+          <Section title="Video dataset">
+            <DatasetUpload videos={videos} onChange={setVideos} />
+          </Section>
+
+          <Section title="Compute" aside={<span className="text-sm text-muted-foreground">Where the dataset is processed</span>}>
+            <ComputeOptions value={provider} onChange={setProvider} videos={videos} />
           </Section>
 
           <Section
@@ -164,18 +169,25 @@ export default function CreateGigPage() {
               ))}
             </ol>
             <dl className="grid grid-cols-2 gap-3 border-t border-border pt-4 text-sm">
+              <dt className="text-muted-foreground">Videos (tasks)</dt>
+              <dd className="text-right font-mono font-semibold">{videos.length}</dd>
               <dt className="text-muted-foreground">Experts per task</dt>
               <dd className="text-right font-mono font-semibold">{raters}</dd>
-              <dt className="text-muted-foreground">Pay per task</dt>
-              <dd className="text-right font-mono font-semibold">{formatMoney(Number(pay) || 0)}</dd>
-              <dt className="text-muted-foreground">Cost per video</dt>
-              <dd className="text-right font-mono font-semibold">{formatMoney((Number(pay) || 0) * Number(raters))}</dd>
+              <dt className="text-muted-foreground">Expert pay</dt>
+              <dd className="text-right font-mono font-semibold">{formatMoney(expertCost)}</dd>
+              <dt className="text-muted-foreground">Compute ({providerMeta.name})</dt>
+              <dd className="text-right font-mono font-semibold">{formatMoney(computeCost)}</dd>
             </dl>
+            <ComputeBreakdown providerId={provider} videos={videos} />
+            <div className="flex items-baseline justify-between border-t border-border pt-4">
+              <span className="font-semibold">Estimated total</span>
+              <Mono className="text-2xl font-semibold">{formatMoney(expertCost + computeCost)}</Mono>
+            </div>
             <Button type="submit" size="lg" disabled={!canSubmit} className="h-12 rounded-full text-[15px]">
               <Sparkles data-icon="inline-start" />
               Post gig and pre-annotate
             </Button>
-            {!video && <p className="-mt-2 text-center text-[13px] text-muted-foreground">Add a video to continue.</p>}
+            {!videos.length && <p className="-mt-2 text-center text-[13px] text-muted-foreground">Add at least one video to continue.</p>}
           </section>
 
           <AnimatePresence>{pipelineStep != null && <PipelineProgress step={pipelineStep} />}</AnimatePresence>

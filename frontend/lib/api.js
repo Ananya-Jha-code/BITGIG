@@ -54,8 +54,8 @@ export function listGigs(companyId) {
   return request(`/gigs?company_id=${encodeURIComponent(companyId)}`);
 }
 
-// formData: title, sop_steps (JSON string), raters_required, required_specialty,
-// pay_per_task, video (File), sop (File, optional)
+// formData: company_id, title, sop_steps (JSON string), raters_required, required_specialty,
+// pay_per_task, compute_provider, videos (File, repeated: one task per video), sop (File, optional)
 export function createGig(formData) {
   if (USE_MOCKS) {
     // Mock state lives in memory for the session, so the new gig shows up on later screens.
@@ -71,12 +71,22 @@ export function createGig(formData) {
       pay_per_task: Number(formData.get("pay_per_task") ?? 12),
       status: "active",
     };
+    const videos = formData.getAll("videos");
     gigs.push(newGig);
-    tasks.push({ id: `task_${Date.now()}`, gig_id: id, assigned_rater_ids: [], ai_segments: aiSegmentsGig1, status: "open" });
+    videos.forEach((file, i) =>
+      tasks.push({
+        id: `task_${Date.now()}_${i + 1}`,
+        gig_id: id,
+        video_url: `/uploads/${file.name}`,
+        assigned_rater_ids: [],
+        ai_segments: aiSegmentsGig1,
+        status: "open",
+      })
+    );
     dashboardByGig[id] = {
       gig_id: id,
-      total_tasks: 1,
-      tasks_by_status: { open: 1, in_progress: 0, submitted: 0, flagged: 0, resolved: 0 },
+      total_tasks: videos.length,
+      tasks_by_status: { open: videos.length, in_progress: 0, submitted: 0, flagged: 0, resolved: 0 },
       agreement_rate: null,
       ai_segments_accepted_rate: null,
       flagged_items: [],

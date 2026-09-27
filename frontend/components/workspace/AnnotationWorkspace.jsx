@@ -33,9 +33,10 @@ export default function AnnotationWorkspace({ task, gig, issues, raterId }) {
   const [saving, setSaving] = useState(null);
 
   const fallbackDuration = Math.ceil(Math.max(...original.map((s) => s.end)) + 1.5);
-  const playback = usePlayback({ src: gig.video_url, fallbackDuration });
+  const videoUrl = task.video_url ?? gig.video_url;
+  const playback = usePlayback({ src: videoUrl, fallbackDuration });
   const { time, duration, seek, togglePlay } = playback;
-  const fileName = gig.video_url?.split("/").pop() ?? "video.mp4";
+  const fileName = videoUrl?.split("/").pop() ?? "video.mp4";
 
   const atPlayhead = segments.findIndex((s) => time >= s.start && time < s.end);
   const activeStep = atPlayhead >= 0 ? segments[atPlayhead].sop_step : null;

@@ -39,9 +39,9 @@ When working in someone else's area, keep changes minimal and mention them in th
 
 - **Frontend:** Next.js + JavaScript (no TypeScript), Tailwind CSS
 - **Backend:** Python 3.11+, FastAPI, Pydantic v2, deployed to Cloud Run
-- **Auth:** Firebase Auth (email/password is enough for the demo)
-- **Database:** Firestore
-- **File storage:** Cloud Storage (videos, SOP files)
+- **Auth:** None. This is a demo; the frontend acts as one of the seeded users (pick a role on the landing page).
+- **Database:** Supabase Postgres via SQLModel (tables in `backend/app/models.py`, created on startup with `create_all`; no migrations)
+- **File storage:** Local disk for the demo (`backend/uploads/`, served at `/uploads`; demo videos served from `demo/` at `/demo`)
 - **AI:** Gemini API via the `google-genai` Python SDK, using structured output (response schemas). The model name comes from the `GEMINI_MODEL` env var; do not hardcode it.
 - **Gemini is the only AI model in the product.** Do not add OpenAI, Anthropic, or any other LLM provider SDKs or API calls. Google is the sponsor.
 
@@ -76,8 +76,8 @@ When working in someone else's area, keep changes minimal and mention them in th
 Core entities:
 
 - **User:** `id`, `name`, `role` (`company` | `expert`), `specialty` (e.g. `lab_technician`), `credential_status` (`verified` | `pending`)
-- **Gig:** `id`, `company_id`, `title`, `data_type` (`lab_video`; `pathology` and `variant` exist only in mocks), `video_url`, `sop_steps[]`, `label_schema`, `raters_required`, `required_specialty`, `pay_per_task`, `status`
-- **Task:** `id`, `gig_id`, `assigned_rater_ids[]`, `ai_segments[]`, `status` (`open` | `in_progress` | `submitted` | `flagged` | `resolved`)
+- **Gig:** `id`, `company_id`, `title`, `data_type` (`lab_video`; `pathology` and `variant` exist only in mocks), `video_url` (first video of the dataset), `sop_steps[]`, `label_schema`, `raters_required`, `required_specialty`, `pay_per_task`, `status`
+- **Task:** `id`, `gig_id`, `video_url`, `assigned_rater_ids[]`, `ai_segments[]`, `status` (`open` | `in_progress` | `submitted` | `flagged` | `resolved`)
 - **Annotation:** `id`, `task_id`, `rater_id`, `segments[]`, `submitted_at`
 - **Segment:**
 
@@ -103,10 +103,12 @@ Core entities:
 ## API endpoints
 
 Core (Person 2):
-- `POST /gigs`: create gig, upload video and SOP, trigger AI pipeline, create tasks
-- `GET /gigs/{id}`
-- `GET /tasks?specialty=...`: marketplace listing
-- `GET /tasks/{id}`: includes `ai_segments`
+- `GET /users?role=...`, `GET /users/{id}`: no auth, so the frontend picks a seeded user to act as
+- `POST /gigs`: multipart form (`company_id`, `title`, `sop_steps` one per line or `sop_file`, `required_specialty`, `pay_per_task`, `raters_required`, `videos` repeated). A gig is a video dataset: each video is saved and gets AI segments (live `segment_video`, else cache), and becomes one task (with its own `video_url`) auto-assigned to verified experts of the specialty. The frontend also sends `compute_provider` (cost estimate only; not stored)
+- `GET /gigs?company_id=...`
+- `GET /gigs/{id}`: `{gig, tasks}`
+- `GET /tasks?specialty=...&rater_id=...`: marketplace listing (task + gig title, pay, segment count)
+- `GET /tasks/{id}`: `{task, gig}`; task includes `ai_segments`
 
 Annotation (Person 3):
 - `POST /tasks/{id}/annotations`: save or submit an annotation (writes audit events)
@@ -151,7 +153,8 @@ npm run dev          # http://localhost:3000
 npm run lint
 
 # Backend
-cd backend && pip install -r requirements.txt
+cd backend && python3.12 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt   # copy .env.example to .env and fill in DATABASE_URL
 uvicorn app.main:app --reload --port 8000
 
 # Seed demo data (company, three experts, one gig, cached AI output)
@@ -167,7 +170,7 @@ Store these in `.env` files that are gitignored. Never commit secrets.
 - `GEMINI_API_KEY`
 - `GEMINI_MODEL`
 - `GOOGLE_CLOUD_PROJECT`
-- `FIREBASE_*` (frontend config)
+- `DATABASE_URL` (Supabase Postgres connection string, Session pooler)
 - `STORAGE_BUCKET`
 - `NEXT_PUBLIC_API_URL`
 

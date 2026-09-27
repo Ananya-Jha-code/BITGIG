@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Data shapes (source of truth)",
+  "description": "Mirrored by backend/app/models.py and frontend/lib/api.js. Change all three together.",
+  "$defs": {
+    "User": {
+      "type": "object",
+      "required": ["id", "name", "role"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "enum": ["company", "expert"] },
+        "specialty": { "type": ["string", "null"], "examples": ["lab_technician"] },
+        "credential_status": { "enum": ["verified", "pending"] }
+      }
+    },
+    "Gig": {
+      "type": "object",
+      "required": ["id", "company_id", "title", "data_type"],
+      "properties": {
+        "id": { "type": "string" },
+        "company_id": { "type": "string" },
+        "title": { "type": "string" },
+        "data_type": { "enum": ["lab_video", "pathology", "variant"] },
+        "video_url": { "type": ["string", "null"], "description": "First video of the dataset; each Task has its own" },
+        "sop_steps": { "type": "array", "items": { "type": "string" } },
+        "label_schema": { "type": "object" },
+        "raters_required": { "type": "integer", "default": 2 },
+        "required_specialty": { "type": ["string", "null"] },
+        "pay_per_task": { "type": "number" },
+        "status": { "enum": ["processing", "open", "completed"] }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "required": ["id", "gig_id", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "gig_id": { "type": "string" },
+        "video_url": { "type": ["string", "null"], "description": "One task per video in the gig's dataset" },
+        "assigned_rater_ids": { "type": "array", "items": { "type": "string" } },
+        "ai_segments": { "type": "array", "items": { "$ref": "#/$defs/Segment" } },
+        "status": { "enum": ["open", "in_progress", "submitted", "flagged", "resolved"] }
+      }
+    },
+    "Annotation": {
+      "type": "object",
+      "required": ["id", "task_id", "rater_id"],
+      "properties": {
+        "id": { "type": "string" },
+        "task_id": { "type": "string" },
+        "rater_id": { "type": "string" },
+        "segments": { "type": "array", "items": { "$ref": "#/$defs/Segment" } },
+        "submitted_at": { "type": ["string", "null"], "format": "date-time", "description": "null while still a draft" }
+      }
+    },
+    "Segment": {
+      "type": "object",
+      "required": ["start", "end", "label"],
+      "properties": {
+        "start": { "type": "number" },
+        "end": { "type": "number" },
+        "label": { "enum": ["aspirate", "dispense", "transfer", "other"] },
+        "sop_step": { "type": ["integer", "null"] },
+        "success": { "type": "boolean", "default": true },
+        "anomaly": { "enum": [null, "spill", "contamination", "misalignment", "missed_step"] },
+        "source": { "enum": ["ai", "human"] },
+        "edited": { "type": "boolean", "default": false }
+      }
+    },
+    "AuditEvent": {
+      "type": "object",
+      "description": "Append-only. Never update or delete.",
+      "required": ["id", "task_id", "actor_id", "action", "timestamp"],
+      "properties": {
+        "id": { "type": "string" },
+        "task_id": { "type": "string" },
+        "actor_id": { "type": "string" },
+        "action": { "type": "string" },
+        "before": {},
+        "after": {},
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

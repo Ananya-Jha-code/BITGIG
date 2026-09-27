@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { motion } from "motion/react";
-import { ArrowRight, Download, FileQuestion, Scale, Sparkles } from "lucide-react";
+import { ArrowRight, Download, FileQuestion, Film, Scale, Sparkles } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import Mono from "@/components/Mono";
 import PageContainer from "@/components/PageContainer";
@@ -146,12 +146,13 @@ export default function GigDashboardPage() {
           <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-lift">
             <div className="flex items-center justify-between border-b border-border px-6 py-4">
               <span className="text-lg font-bold">Tasks</span>
-              <Mono className="text-sm text-muted-foreground">{tasks.length} total</Mono>
+              <Mono className="text-sm text-muted-foreground">{tasks.length} {tasks.length === 1 ? "video" : "videos"}</Mono>
             </div>
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="pl-6">Task</TableHead>
+                  <TableHead>Video</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Experts</TableHead>
                   <TableHead>Gemini segments</TableHead>
@@ -163,6 +164,12 @@ export default function GigDashboardPage() {
                   <TableRow key={task.id}>
                     <TableCell className="pl-6">
                       <Mono className="font-semibold">{task.id}</Mono>
+                    </TableCell>
+                    <TableCell className="max-w-48">
+                      <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <Film className="size-3.5 shrink-0" aria-hidden />
+                        <span className="truncate">{(task.video_url ?? gig.video_url)?.split("/").pop() ?? "—"}</span>
+                      </span>
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={task.status} />
