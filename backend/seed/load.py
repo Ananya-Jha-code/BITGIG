@@ -68,6 +68,7 @@ def build_rows() -> list:
     task = Task(
         id=TASK_ID,
         gig_id=GIG_ID,
+        video_url=f"/demo/videos/{DEMO_VIDEO}",
         assigned_rater_ids=EXPERT_IDS[:2],
         ai_segments=load_cached_segments(DEMO_VIDEO) or [],
         status=TaskStatus.open,

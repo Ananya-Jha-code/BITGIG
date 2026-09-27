@@ -103,7 +103,7 @@ class Gig(SQLModel, table=True):
     company_id: str = Field(foreign_key="users.id", index=True)
     title: str
     data_type: DataType = DataType.lab_video
-    video_url: str | None = None
+    video_url: str | None = None  # first video of the dataset (cover); each Task has its own
     sop_steps: list[str] = Field(default_factory=list, sa_column=Column(JSONB, nullable=False))
     label_schema: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB, nullable=False))
     raters_required: int = 2
@@ -117,6 +117,7 @@ class Task(SQLModel, table=True):
 
     id: str = Field(default_factory=new_id, primary_key=True)
     gig_id: str = Field(foreign_key="gigs.id", index=True)
+    video_url: str | None = None  # one task per video in the gig's dataset
     assigned_rater_ids: list[str] = Field(default_factory=list, sa_column=Column(JSONB, nullable=False))
     ai_segments: list[dict[str, Any]] = Field(default_factory=list, sa_column=Column(JSONB, nullable=False))
     status: TaskStatus = TaskStatus.open

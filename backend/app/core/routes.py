@@ -66,7 +66,7 @@ def create_gig(
     required_specialty: str = Form("lab_technician"),
     pay_per_task: float = Form(10.0),
     raters_required: int = Form(2),
-    video: UploadFile = File(...),
+    videos: list[UploadFile] = File(..., description="The dataset: one task is created per video"),
     sop_file: UploadFile | None = File(None, description="Plain-text SOP, one step per line"),
     session: Session = Depends(get_session),
 ) -> GigDetail:
@@ -80,13 +80,13 @@ def create_gig(
     if not steps:
         raise HTTPException(400, "Provide SOP steps (text or sop_file)")
 
-    video_path, video_url = save_upload(video)
+    saved = [(save_upload(v), v.filename or "") for v in videos]
 
     gig = Gig(
         company_id=company_id,
         title=title,
         data_type=DataType.lab_video,
-        video_url=video_url,
+        video_url=saved[0][0][1],
         sop_steps=steps,
         label_schema={
             "labels": [l.value for l in SegmentLabel],
@@ -100,22 +100,26 @@ def create_gig(
     session.add(gig)
     session.commit()
 
+    raters = _pick_raters(session, required_specialty, raters_required)
+    tasks = []
     # Runs inline: cached demo videos return instantly.
-    ai_segments = get_ai_segments(video_path, video.filename or "", steps)
-
-    task = Task(
-        gig_id=gig.id,
-        assigned_rater_ids=_pick_raters(session, required_specialty, raters_required),
-        ai_segments=ai_segments,
-        status=TaskStatus.open,
-    )
+    for (video_path, video_url), name in saved:
+        task = Task(
+            gig_id=gig.id,
+            video_url=video_url,
+            assigned_rater_ids=raters,
+            ai_segments=get_ai_segments(video_path, name, steps),
+            status=TaskStatus.open,
+        )
+        session.add(task)
+        tasks.append(task)
     gig.status = GigStatus.open
-    session.add(task)
     session.add(gig)
     session.commit()
     session.refresh(gig)
-    session.refresh(task)
-    return GigDetail(gig=gig, tasks=[task])
+    for task in tasks:
+        session.refresh(task)
+    return GigDetail(gig=gig, tasks=tasks)
 
 
 @router.get("/gigs", response_model=list[Gig])
@@ -157,6 +161,7 @@ def list_tasks(
             id=task.id,
             gig_id=gig.id,
             gig_title=gig.title,
+            video_url=task.video_url or gig.video_url,
             data_type=gig.data_type,
             required_specialty=gig.required_specialty,
             pay_per_task=gig.pay_per_task,
