@@ -81,6 +81,26 @@ class Segment(BaseModel):
     anomaly: Anomaly | None = None
     source: Source = Source.human
     edited: bool = False
+    confidence: float | None = None
+
+
+# --- SOP (demo JSON in demo/sops/; stored on Gig.label_schema["sop"]) ---
+
+class SopStep(BaseModel):
+    index: int
+    text: str
+    default_label: SegmentLabel = SegmentLabel.other
+    usually_absent_from_recording: bool = False
+    absence_note: str | None = None
+    model_config = {"extra": "allow"}
+
+
+class RichSOP(BaseModel):
+    sop_id: str = "inline"
+    title: str = ""
+    steps: list[SopStep]
+    expected_absent_steps: list[int] = []
+    model_config = {"extra": "allow"}
 
 
 # --- Tables ---

@@ -100,10 +100,13 @@ should score as full agreement. If it does not, the matching logic has a bug.
 
 | Consumer | Reads |
 |---|---|
-| `backend/app/ai/` | `videos/clips/*.mp4`, `sops/*.json` |
+| `backend/app/ai/segment_video` | `videos/clips/*.mp4` via Gemini Files API, `sops/*.json` |
 | `backend/app/ai/` cache | writes `backend/seed/ai_cache/<clip_slug>.json` |
-| `backend/seed/load.py` | `manifest.json`, `sops/`, `annotations/` |
-| Consensus review | `annotations/raters/<clip_slug>__expert_{a,b}.json` |
+| `backend/seed/load.py` | `manifest.json`, `sops/`, `annotations/raters/` |
+| Consensus review | `annotations/raters/<clip_slug>__expert_{a,b}.json` (synthetic; not human IRR) |
+
+Live Gemini is skipped when a cache file exists so the demo does not wait on the API.
+Demo clips are 720p / 15 fps / no audio so Files API uploads stay under 20 MB.
 
 Key the AI cache on `clip_slug`, not on the video filename or an upload ID, so a
 re-transcode does not silently orphan the cache.

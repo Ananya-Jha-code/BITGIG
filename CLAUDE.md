@@ -116,10 +116,12 @@ Annotation (Person 3):
 - `GET /gigs/{id}/export`: final agreed annotations as JSON
 - `GET /experts/{id}/earnings`: tasks completed × pay (display only)
 
-AI (Person 4, called internally by the backend):
-- `segment_video(video_uri, sop_steps) -> list[Segment]`
+AI (`backend/app/ai/`, called internally by the backend):
+- `segment_video(video_uri, sop, *, clip_slug=None) -> AiAnnotateResult`
 - `check_annotation(ai_segments, human_segments) -> list[Issue]`
 - `explain_disagreement(annotation_a, annotation_b, sop_steps) -> str`
+
+Cache lives in `backend/seed/ai_cache/<clip_slug>.json`. Seed fixtures use `model: seed-fixture` (LSV clocks + SOP default labels). They are not gold and not Gemini output. Live Gemini writes the same envelope with the real model id.
 
 ## Consensus logic
 
@@ -154,8 +156,11 @@ npm run lint
 cd backend && pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 
-# Seed demo data (company, three experts, one gig, cached AI output)
+# Seed demo data (company, three experts, LSV gigs, fixture cache, synthetic raters)
 python -m seed.load
+
+# Rebuild fixture cache only (no Gemini, no gold copy)
+python -m app.ai.fixture
 ```
 
 Update this section if commands change.
@@ -164,8 +169,8 @@ Update this section if commands change.
 
 Store these in `.env` files that are gitignored. Never commit secrets.
 
-- `GEMINI_API_KEY`
-- `GEMINI_MODEL`
+- `GEMINI_API_KEY` (or `GOOGLE_API_KEY`)
+- `GEMINI_MODEL` (optional; default in `backend/app/ai/config.py`)
 - `GOOGLE_CLOUD_PROJECT`
 - `FIREBASE_*` (frontend config)
 - `STORAGE_BUCKET`

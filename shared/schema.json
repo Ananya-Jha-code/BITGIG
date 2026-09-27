@@ -1,0 +1,34 @@
+{
+  "segment": {
+    "start": "float seconds",
+    "end": "float seconds",
+    "label": "aspirate | dispense | transfer | other",
+    "sop_step": "int | null (0-based)",
+    "success": "bool",
+    "anomaly": "null | spill | contamination | misalignment | missed_step",
+    "source": "ai | human",
+    "edited": "bool",
+    "confidence": "float 0-1 | null (AI only; optional)"
+  },
+  "ai_cache": {
+    "clip_slug": "string",
+    "video": "videos/clips/<clip_slug>.mp4",
+    "model": "GEMINI_MODEL value, or seed-fixture",
+    "prompt_version": "v1 | fixture-v1",
+    "created_at": "ISO-8601",
+    "needs_review": "bool",
+    "segments": ["segment"],
+    "note": "Legacy files may be a bare segment array. Reader accepts both."
+  },
+  "gold": {
+    "clip_slug": "string",
+    "segments": ["segment with source=human"],
+    "note": "Ground truth. Never copy into ai_cache as if Gemini produced it."
+  },
+  "rater": {
+    "clip_slug": "string",
+    "rater_id": "expert_a | expert_b",
+    "synthetic": true,
+    "segments": ["segment"]
+  }
+}

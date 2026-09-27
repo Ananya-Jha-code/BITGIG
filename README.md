@@ -1,61 +1,63 @@
 # BITGIG
 
-A marketplace for robot training data. Companies post a task spec. People complete it. Gemini sorts each clip before a human looks at it.
+Expert annotation for lab protocol video. Gemini pre-annotates SOP-aligned time segments. Specialists correct them. Disagreements between two raters are flagged automatically.
 
-This repo is a stub. There is no app, API, or demo code here yet.
+This is not Encord. Encord’s Gemini draws boxes and captions. This Gemini outputs `aspirate | dispense | transfer | other` segments with `success` and `anomaly`, aligned to a 0-based SOP.
 
-## Problem
-
-- Robot teams need labeled clips of a specific task. Most raw footage is empty or off-spec.
-- Paying humans to watch every clip wastes money on footage no one should label.
-- Failures are useful (they show what not to do) but often get thrown out with the junk.
-- Buyers should pay for accepted clips, not for uploads.
-
-## How it is meant to work
-
-Not implemented in this repo. Intended flow:
-
-1. A company posts a task spec.
-2. A contributor records the task in simulation (real video later).
-3. Gemini sorts the clip using sim/lab state plus the spec, not as a labeling pencil. Buckets: trash, useful fail, useful success, needs a human.
-4. Empty / off-spec clips are dropped. Humans never see them.
-5. Useful failures are kept.
-6. Buyers pay only for accepted clips. Contributors are paid when a clip passes.
-
-We did not invent AI labeling. Encord already uses Gemini/SAM to draw boxes and write captions. The difference here is the filter: should a human even look?
-
-## What is live vs mocked
+## What is live vs fixture
 
 | Piece | Status |
 | --- | --- |
-| Task spec posting | Not in this repo |
-| Simulation or video capture | Not in this repo |
-| Gemini sort (trash / useful fail / useful success / needs a human) | Not in this repo |
-| Human review queue | Not in this repo |
-| Payments (buyer or contributor) | Not in this repo |
-| Real-video path | Not started (later) |
+| FastAPI gigs, tasks, annotations, consensus, dashboard, export | Live (`backend/`) |
+| Gemini `segment_video` (Files API + structured JSON) | Live code; needs `GEMINI_API_KEY` and a clip file |
+| AI cache `backend/seed/ai_cache/<clip_slug>.json` | Live reader (envelope or legacy array) |
+| Seed-fixture cache | Offline timelines from LSV clocks + SOP `default_label`. Not gold. Not a Gemini transcript. `model: seed-fixture` |
+| Gold JSON | Human ground truth from LSV clocks + hand `step_findings` |
+| Synthetic raters (`expert_a` / `expert_b`) | Inputs to disagreement detection. Not human IRR. |
+| LSV download + ffmpeg | Scripts in `demo/scripts/`. Videos are gitignored. |
+| Payments / wallets | Not in this repo |
 
-Nothing is mocked here because nothing is built here.
+## How the AI path works
+
+1. Company creates a gig (or seed loads LSV clips from `demo/manifest.json`).
+2. `get_ai_segments` uses cache for that `clip_slug` if present.
+3. If there is no cache, `segment_video` uploads the clip with the Gemini Files API and asks for structured segments.
+4. Two assigned experts submit annotations. Consensus uses temporal IoU ≥ 0.5 and flags label / SOP / success / anomaly / boundary mismatches.
+5. `explain_disagreement` adds a short Gemini note when a key is set; otherwise a local sentence.
+6. `check_annotation` compares the AI timeline to one human timeline and writes an audit event on submit.
 
 ## Setup
-
-There is nothing to install yet.
 
 ```bash
 git clone <this-repo>
 cd BITGIG
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env   # set DATABASE_URL; optional GEMINI_API_KEY
+python -m seed.load
+uvicorn app.main:app --reload --port 8000
 ```
 
-No env vars. No run command.
+Optional clips (not required for seed or cache):
 
-## Demo
+```bash
+pip install -r demo/scripts/requirements.txt
+cd demo/scripts
+python fetch_lsv.py          # download:true clips only
+python make_clips.py
+```
 
-There is no demo to run.
+## Demo without a Gemini key
+
+`python -m seed.load` writes seed-fixture cache and loads synthetic rater pairs so consensus already has flags. The API does not call Gemini unless a cache file is missing and a key is set.
 
 ## Stack
 
-Not chosen in this repo. No `package.json`, `requirements.txt`, or other app files.
+- Backend: Python 3.11+, FastAPI, SQLModel, Postgres
+- AI: `google-genai`, model from `GEMINI_MODEL` (default `gemini-2.5-flash` in `backend/app/ai/config.py`)
+- Demo media: LSV (YinkaiW/LSV), CC BY-NC 4.0
 
 ## License
 
-TBD. No license file yet.
+TBD. Demo footage is CC BY-NC 4.0 (see `demo/SOURCES.md`).

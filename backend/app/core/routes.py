@@ -1,6 +1,10 @@
+import json
+
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlmodel import Session, select
 
+from app.ai.cache import clip_slug_from_name
+from app.ai.sop import normalize_sop, sop_lines
 from app.core.pipeline import get_ai_segments
 from app.core.schemas import GigDetail, TaskDetail, TaskListItem
 from app.core.storage import save_upload
@@ -75,12 +79,26 @@ def create_gig(
         raise HTTPException(400, "company_id must be an existing company user")
 
     steps = _parse_sop(sop_steps)
-    if not steps and sop_file is not None:
-        steps = _parse_sop(sop_file.file.read().decode("utf-8", errors="ignore"))
+    sop_document = None
+    if sop_file is not None:
+        raw = sop_file.file.read().decode("utf-8", errors="ignore")
+        name = (sop_file.filename or "").lower()
+        if name.endswith(".json"):
+            try:
+                sop_document = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise HTTPException(400, f"SOP JSON is invalid: {exc}") from exc
+            rich = normalize_sop(sop_document)
+            sop_document = rich.model_dump(mode="json")
+            if not steps:
+                steps = sop_lines(rich)
+        elif not steps:
+            steps = _parse_sop(raw)
     if not steps:
         raise HTTPException(400, "Provide SOP steps (text or sop_file)")
 
     video_path, video_url = save_upload(video)
+    clip_slug = clip_slug_from_name(video.filename or "")
 
     gig = Gig(
         company_id=company_id,
@@ -91,6 +109,8 @@ def create_gig(
         label_schema={
             "labels": [l.value for l in SegmentLabel],
             "anomalies": [a.value for a in Anomaly],
+            "sop": sop_document,
+            "clip_slug": clip_slug or None,
         },
         raters_required=raters_required,
         required_specialty=required_specialty,
@@ -101,7 +121,13 @@ def create_gig(
     session.commit()
 
     # Runs inline: cached demo videos return instantly.
-    ai_segments = get_ai_segments(video_path, video.filename or "", steps)
+    ai_sop = sop_document if sop_document is not None else steps
+    ai_segments = get_ai_segments(
+        video_path,
+        video.filename or "",
+        ai_sop,
+        clip_slug=clip_slug or None,
+    )
 
     task = Task(
         gig_id=gig.id,
