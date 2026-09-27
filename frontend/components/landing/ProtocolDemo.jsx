@@ -24,10 +24,17 @@ const STEPS = [
 export default function ProtocolDemo() {
   const [step, setStep] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Increments each time the demo returns to Upload, so the film strip replays from raw.
+  const [lap, setLap] = useState(0);
+
+  function goTo(next) {
+    if (next === 0) setLap((l) => l + 1);
+    setStep(next);
+  }
 
   useEffect(() => {
     if (paused) return;
-    const id = setTimeout(() => setStep((s) => (s + 1) % STEPS.length), STEP_MS);
+    const id = setTimeout(() => goTo((step + 1) % STEPS.length), STEP_MS);
     return () => clearTimeout(id);
   }, [step, paused]);
 
@@ -44,7 +51,7 @@ export default function ProtocolDemo() {
             <li key={s.title} className="border-t border-border last:border-b">
               <button
                 type="button"
-                onClick={() => setStep(i)}
+                onClick={() => goTo(i)}
                 aria-current={active ? "step" : undefined}
                 className="group relative flex w-full items-start gap-6 py-6 text-left"
               >
@@ -91,7 +98,7 @@ export default function ProtocolDemo() {
         })}
       </ol>
 
-      <ProtocolStage step={step} />
+      <ProtocolStage key={lap} step={step} />
     </div>
   );
 }

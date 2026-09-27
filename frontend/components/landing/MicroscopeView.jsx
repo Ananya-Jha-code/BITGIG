@@ -186,8 +186,10 @@ export default function MicroscopeView() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               >
-                <MousePointer2 className="size-6 fill-white text-ink drop-shadow" />
-                <span className="absolute top-6 left-4 rounded-full bg-ink px-2 py-0.5 font-mono text-[11px] whitespace-nowrap text-white">Dr. Chen</span>
+                <MousePointer2 className="size-7 fill-white text-ink drop-shadow" />
+                <span className="absolute top-5 left-6 text-base font-bold whitespace-nowrap text-ink [text-shadow:0_0_6px_rgba(255,255,255,0.95),0_0_2px_rgba(255,255,255,1)]">
+                  Dr. Reyes
+                </span>
                 <motion.span
                   className="absolute -top-3 -left-3 size-6 rounded-full border-2 border-ink"
                   initial={{ scale: 0.2, opacity: 0 }}
