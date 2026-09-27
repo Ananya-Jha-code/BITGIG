@@ -43,13 +43,13 @@ export default function ProtocolStage({ step }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ delay: 2.2 }}
+              transition={{ delay: 1.3 }}
             >
               <ArrowDown className="size-5 text-muted-foreground" />
               <motion.span
                 initial={{ scale: 0.8, y: -8 }}
                 animate={{ scale: 1, y: 0 }}
-                transition={{ delay: 2.4, type: "spring", stiffness: 300, damping: 18 }}
+                transition={{ delay: 1.45, type: "spring", stiffness: 300, damping: 18 }}
                 className="inline-flex items-center gap-2.5 text-xl font-bold text-success"
               >
                 <FileCheck2 className="size-6" />
@@ -78,7 +78,7 @@ function Filmstrip({ step }) {
             className="pointer-events-none absolute -inset-y-2 z-20 w-1 rounded-full bg-primary shadow-[0_0_20px_5px_rgba(214,36,122,0.6)]"
             initial={{ left: "0%" }}
             animate={{ left: "100%" }}
-            transition={{ duration: 1.8, ease: "easeInOut" }}
+            transition={{ duration: 1.1, ease: "easeInOut" }}
           />
         )}
       </div>
@@ -90,7 +90,7 @@ function Filmstrip({ step }) {
           className="absolute bottom-0 left-0 h-1 bg-primary"
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
-          transition={{ duration: 2.4, ease: "easeInOut" }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
         />
       )}
     </div>
@@ -120,7 +120,7 @@ function Frame({ frame, i, step }) {
       className={cn("relative aspect-4/3 overflow-hidden rounded-lg bg-ink-soft", wrong && step === 2 && "ring-2 ring-white ring-inset")}
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.15 + i * 0.18, duration: 0.5, ease: EASE }}
+      transition={{ delay: 0.1 + i * 0.12, duration: 0.4, ease: EASE }}
     >
       <div className="absolute inset-0 flex items-center justify-center">
         <Icon className={cn("size-10 transition-colors duration-500", tagged ? "text-white" : "text-white/35")} strokeWidth={1.75} />
@@ -135,7 +135,7 @@ function Frame({ frame, i, step }) {
             initial={{ opacity: 0, y: 8, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ delay: step === 1 ? 0.35 + i * 0.4 : step === 2 && wrong ? 1.0 : 0, duration: 0.35, ease: EASE }}
+            transition={{ delay: step === 1 ? 0.2 + i * 0.25 : step === 2 && wrong ? 0.6 : 0, duration: 0.3, ease: EASE }}
           >
             {step === 1 && <Sparkles className="size-3.5" />}
             {label.name}
@@ -151,10 +151,10 @@ function Frame({ frame, i, step }) {
             initial={{ left: "110%", top: "110%", opacity: 0 }}
             animate={{ left: "8%", top: "8%", opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: EASE }}
+            transition={{ duration: 0.5, ease: EASE }}
           >
             <MousePointer2 className="size-6 fill-white text-ink" />
-            <span className="absolute top-0.5 left-7 text-sm font-bold whitespace-nowrap text-white">Dr. Reyes</span>
+            <span className="absolute top-0.5 left-7 text-sm font-bold whitespace-nowrap text-white">Dr. Sudesh Reddy</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -171,8 +171,8 @@ function Frame({ frame, i, step }) {
                 initial={{ scale: 0, backgroundColor: late ? "#c2412d" : "#2f855a" }}
                 animate={{ scale: 1, backgroundColor: "#2f855a" }}
                 transition={{
-                  scale: { delay: 0.2 + i * 0.15 + k * 0.1, type: "spring", stiffness: 400, damping: 18 },
-                  backgroundColor: { delay: late ? 1.6 : 0, duration: 0.3 },
+                  scale: { delay: 0.1 + i * 0.1 + k * 0.06, type: "spring", stiffness: 400, damping: 18 },
+                  backgroundColor: { delay: late ? 0.9 : 0, duration: 0.3 },
                 }}
               >
                 <Check className="size-3.5" strokeWidth={3.5} />

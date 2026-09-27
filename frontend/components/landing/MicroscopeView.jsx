@@ -188,7 +188,7 @@ export default function MicroscopeView() {
               >
                 <MousePointer2 className="size-7 fill-white text-ink drop-shadow" />
                 <span className="absolute top-5 left-6 text-base font-bold whitespace-nowrap text-ink [text-shadow:0_0_6px_rgba(255,255,255,0.95),0_0_2px_rgba(255,255,255,1)]">
-                  Dr. Reyes
+                  Dr. Sudesh Reddy
                 </span>
                 <motion.span
                   className="absolute -top-3 -left-3 size-6 rounded-full border-2 border-ink"

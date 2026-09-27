@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
   Four steps auto-advance; each one animates the same mini workspace into its next state.
 */
 
-const STEP_MS = 5200;
+const STEP_MS = 3400;
 const EASE = [0.22, 1, 0.36, 1];
 
 const STEPS = [
