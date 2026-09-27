@@ -37,7 +37,7 @@ When working in someone else's area, keep changes minimal and mention them in th
 
 ## Tech stack
 
-- **Frontend:** Next.js + TypeScript (strict), Tailwind CSS
+- **Frontend:** Next.js + JavaScript (no TypeScript), Tailwind CSS
 - **Backend:** Python 3.11+, FastAPI, Pydantic v2, deployed to Cloud Run
 - **Auth:** Firebase Auth (email/password is enough for the demo)
 - **Database:** Firestore
@@ -55,7 +55,7 @@ When working in someone else's area, keep changes minimal and mention them in th
 ├── frontend/
 │   ├── app/                 # Next.js routes (one folder per screen)
 │   ├── components/
-│   ├── lib/api.ts           # All backend calls go through here
+│   ├── lib/api.js           # All backend calls go through here
 │   └── mocks/               # Fake data for mocked screens
 ├── backend/
 │   ├── app/
@@ -64,15 +64,14 @@ When working in someone else's area, keep changes minimal and mention them in th
 │   │   ├── core/            # Person 2
 │   │   ├── annotation/      # Person 3
 │   │   └── ai/              # Person 4
-│   ├── seed/                # Demo seed data + cached AI outputs
-│   └── tests/
+│   └── seed/                # Demo seed data + cached AI outputs
 └── demo/
     └── videos/              # Demo lab videos (small, committed or linked)
 ```
 
 ## Data model
 
-`shared/schema.json` is the source of truth. **Do not change field names or types without updating the schema, the Pydantic models, and `frontend/lib/api.ts` types together**, and flag the change to the team.
+`shared/schema.json` is the source of truth. **Do not change field names or types without updating the schema, the Pydantic models, and `frontend/lib/api.js` together**, and flag the change to the team.
 
 Core entities:
 
@@ -154,7 +153,6 @@ npm run lint
 # Backend
 cd backend && pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
-pytest
 
 # Seed demo data (company, three experts, one gig, cached AI output)
 python -m seed.load
@@ -175,12 +173,12 @@ Store these in `.env` files that are gitignored. Never commit secrets.
 
 ## Coding conventions
 
-- TypeScript strict mode; no `any` unless unavoidable and commented.
+- Frontend is plain JavaScript (`.js`/`.jsx`). Do not use TypeScript.
 - Python type hints everywhere; Pydantic models for every request and response.
-- All frontend API calls go through `frontend/lib/api.ts`.
+- All frontend API calls go through `frontend/lib/api.js`.
 - Keep components small; one screen per route folder.
 - Prefer simple, readable code over clever abstractions. This is a hackathon.
-- Write tests for consensus logic and AI response parsing; other areas only need tests if they're tricky.
+- Do not write test cases.
 
 ## Working rules for Claude
 
