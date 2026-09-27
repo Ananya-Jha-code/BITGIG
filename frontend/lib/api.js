@@ -2,7 +2,7 @@
 // Flip USE_MOCKS to false to hit the real FastAPI backend at NEXT_PUBLIC_API_URL.
 import { users, DEMO_COMPANY_ID, DEMO_EXPERT_ID } from "@/mocks/users";
 import { gigs } from "@/mocks/gigs";
-import { tasks } from "@/mocks/tasks";
+import { aiSegmentsGig1, tasks } from "@/mocks/tasks";
 import { annotations } from "@/mocks/annotations";
 import { consensusByTask } from "@/mocks/consensus";
 import { dashboardByGig } from "@/mocks/dashboard";
@@ -58,11 +58,28 @@ export function listGigs(companyId) {
 // pay_per_task, video (File), sop (File, optional)
 export function createGig(formData) {
   if (USE_MOCKS) {
+    // Mock state lives in memory for the session, so the new gig shows up on later screens.
+    const id = `gig_${Date.now()}`;
+    const sopSteps = JSON.parse(formData.get("sop_steps") ?? "[]");
     const newGig = {
       ...gigs[0],
-      id: `gig_${Date.now()}`,
+      id,
       title: formData.get("title") ?? gigs[0].title,
+      sop_steps: sopSteps.length ? sopSteps : gigs[0].sop_steps,
+      raters_required: Number(formData.get("raters_required") ?? 2),
+      required_specialty: formData.get("required_specialty") ?? "lab_technician",
+      pay_per_task: Number(formData.get("pay_per_task") ?? 12),
       status: "active",
+    };
+    gigs.push(newGig);
+    tasks.push({ id: `task_${Date.now()}`, gig_id: id, assigned_rater_ids: [], ai_segments: aiSegmentsGig1, status: "open" });
+    dashboardByGig[id] = {
+      gig_id: id,
+      total_tasks: 1,
+      tasks_by_status: { open: 1, in_progress: 0, submitted: 0, flagged: 0, resolved: 0 },
+      agreement_rate: null,
+      ai_segments_accepted_rate: null,
+      flagged_items: [],
     };
     return mock(newGig);
   }
@@ -72,6 +89,12 @@ export function createGig(formData) {
 export function getGig(id) {
   if (USE_MOCKS) return mock(gigs.find((g) => g.id === id) ?? null);
   return request(`/gigs/${id}`);
+}
+
+// Every task on one gig, for the company dashboard.
+export function listGigTasks(gigId) {
+  if (USE_MOCKS) return mock(tasks.filter((t) => t.gig_id === gigId));
+  return request(`/gigs/${gigId}`).then((res) => res.tasks);
 }
 
 export function listTasks(specialty) {
@@ -133,7 +156,20 @@ export function getConsensus(taskId) {
 
 // resolution: final agreed segments chosen by the adjudicator.
 export function adjudicate(taskId, { actorId, segments }) {
-  if (USE_MOCKS) return mock({ task_id: taskId, status: "resolved", segments });
+  if (USE_MOCKS) {
+    // Resolve the task and update its gig's dashboard so the company view reflects it.
+    const task = tasks.find((t) => t.id === taskId);
+    const dashboard = task && dashboardByGig[task.gig_id];
+    if (task && task.status !== "resolved") {
+      if (dashboard) {
+        dashboard.tasks_by_status[task.status] -= 1;
+        dashboard.tasks_by_status.resolved += 1;
+        dashboard.flagged_items = dashboard.flagged_items.filter((f) => f.task_id !== taskId);
+      }
+      task.status = "resolved";
+    }
+    return mock({ task_id: taskId, status: "resolved", segments });
+  }
   return request(`/tasks/${taskId}/adjudicate`, {
     method: "POST",
     body: JSON.stringify({ actor_id: actorId, segments }),
