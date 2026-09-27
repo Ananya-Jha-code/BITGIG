@@ -1,0 +1,57 @@
+{
+  "sop_id": "mock_cas9_delivery",
+  "title": "Cas9 delivery into 293T cells",
+  "source": {
+    "dataset": "YinkaiW/LSV",
+    "file": "DJI/DJI-Protocol/Mock_Cas9_Delivery.txt",
+    "license": "CC BY-NC 4.0"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "text": "Add reagent 1 into a sterile 1.5 mL EP tube.",
+      "default_label": "transfer",
+      "vessel": "1.5 mL EP tube"
+    },
+    {
+      "index": 1,
+      "text": "Add reagent 2 into the EP tube.",
+      "default_label": "transfer",
+      "vessel": "1.5 mL EP tube",
+      "requires_tip_change_from": 0
+    },
+    {
+      "index": 2,
+      "text": "Add reagent 3 into the EP tube.",
+      "default_label": "transfer",
+      "vessel": "1.5 mL EP tube",
+      "requires_tip_change_from": 1
+    },
+    {
+      "index": 3,
+      "text": "Mix well.",
+      "default_label": "other",
+      "vessel": "1.5 mL EP tube"
+    },
+    {
+      "index": 4,
+      "text": "Incubate at room temperature for 20 min.",
+      "default_label": "other",
+      "vessel": "1.5 mL EP tube",
+      "usually_absent_from_recording": true,
+      "absence_note": "A 20 min wait is cut from every LSV recording. Absence is expected and must not be scored as missed_step."
+    },
+    {
+      "index": 5,
+      "text": "Add the mixture dropwise into a 10 cm dish of 293T cells (~70-80% confluency).",
+      "default_label": "dispense",
+      "vessel": "10 cm dish"
+    },
+    {
+      "index": 6,
+      "text": "Gently rock the dish forward and backward to mix.",
+      "default_label": "other",
+      "vessel": "10 cm dish"
+    }
+  ]
+}

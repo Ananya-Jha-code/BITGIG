@@ -1,0 +1,80 @@
+{
+  "clip_slug": "transform_092_correct",
+  "rater_id": "expert_a",
+  "synthetic": true,
+  "derived_from": "annotations/gold/transform_092_correct.json",
+  "perturbation_note": "gold with every start shifted +0.3s; expected to agree",
+  "planted_disagreements": [],
+  "segments": [
+    {
+      "start": 0.3,
+      "end": 28.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 28.3,
+      "end": 32.0,
+      "label": "other",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 32.3,
+      "end": 38.0,
+      "label": "other",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 38.3,
+      "end": 50.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 50.3,
+      "end": 58.0,
+      "label": "other",
+      "sop_step": 4,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 58.3,
+      "end": 85.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 85.3,
+      "end": 88.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

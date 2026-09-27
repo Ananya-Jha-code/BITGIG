@@ -1,0 +1,55 @@
+{
+  "clip_slug": "cas9_039_wrong_vessel",
+  "rater_id": "expert_b",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_039_wrong_vessel.json",
+  "perturbation_note": "gold with planted disagreements; expected to flag",
+  "planted_disagreements": [
+    "boundary shift of 2.4s on sop_step 0",
+    "label transfer -> dispense on sop_step 0",
+    "anomaly 'misalignment' dropped on sop_step 0",
+    "segment for sop_step 6 omitted entirely"
+  ],
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 17.0,
+      "label": "dispense",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 17.0,
+      "end": 22.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 22.0,
+      "end": 31.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 22.5,
+      "end": 22.9,
+      "label": "other",
+      "sop_step": 3,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

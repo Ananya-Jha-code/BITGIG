@@ -1,0 +1,79 @@
+{
+  "clip_slug": "cas9_033_contamination",
+  "video": "videos/clips/cas9_033_contamination.mp4",
+  "gig_slug": "cas9_delivery_293t",
+  "sop_id": "mock_cas9_delivery",
+  "duration_s": 100.0,
+  "source": {
+    "dataset": "YinkaiW/LSV",
+    "slice_id": "DJI-033",
+    "source_file": "DJI/DJI-Video/DJI_20250801070137_0015_D.MP4",
+    "license": "CC BY-NC 4.0",
+    "lsv_issue": "Added reagent 1/2/3 without changing the pipette tip"
+  },
+  "expected_absent_steps": [
+    4
+  ],
+  "segments": [
+    {
+      "start": 17.0,
+      "end": 36.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 36.0,
+      "end": 50.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "contamination",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 50.0,
+      "end": 65.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "contamination",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 65.0,
+      "end": 80.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 80.0,
+      "end": 90.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 90.0,
+      "end": 100.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}
