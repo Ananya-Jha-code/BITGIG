@@ -1,7 +1,8 @@
 "use client";
 
 // Demo "login": the chosen role lives in localStorage until Firebase Auth is wired up.
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 
 const STORAGE_KEY = "bitgig_role";
 const listeners = new Set();
@@ -32,4 +33,16 @@ export function setRole(role) {
 
 export function useRole() {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+// Picks a role and routes to that role's first screen.
+export function useChooseRole() {
+  const router = useRouter();
+  return useCallback(
+    (role) => {
+      setRole(role);
+      router.push(role === "company" ? "/company/gigs/new" : "/tasks");
+    },
+    [router]
+  );
 }

@@ -6,8 +6,8 @@ export default function GeminiChip({ children = "Gemini", glow = false, size = "
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-full border border-primary/40 bg-primary/10 font-medium text-gemini",
-        size === "xs" ? "h-5 px-1.5 text-[11px]" : "h-6 px-2 text-xs",
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/25 bg-primary-soft font-semibold text-gemini",
+        size === "xs" ? "h-6 px-2 text-xs" : "h-7 px-2.5 text-[13px]",
         glow && "gemini-glow",
         className
       )}

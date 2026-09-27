@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Crosshair, Minus, MousePointerClick, Plus, RotateCcw } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { ArrowRight, Check, Crosshair, Minus, MousePointerClick, Plus, RotateCcw } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import GeminiChip from "@/components/GeminiChip";
 import HumanEditedMark from "@/components/HumanEditedMark";
 import Mono from "@/components/Mono";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,35 +17,62 @@ import { cn } from "@/lib/utils";
 
 const NUDGE = 0.1;
 
-export default function SegmentInspector({ index, segment, total, sopSteps, currentTime, onChange, onRevert }) {
-  if (!segment) {
-    return (
-      <Panel>
-        <EmptyState
-          icon={MousePointerClick}
-          title="Select a segment"
-          description="Click a segment on the timeline to review Gemini's label, boundaries and outcome."
-          className="border-0 py-12"
-        />
-      </Panel>
-    );
-  }
+export default function SegmentInspector({ index, segment, total, reviewed, isLast, sopSteps, currentTime, onChange, onRevert, onConfirm }) {
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-lift">
+      <AnimatePresence mode="wait" initial={false}>
+        {!segment ? (
+          <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
+            <EmptyState
+              icon={MousePointerClick}
+              title="Pick a segment to review"
+              description="Click one on the timeline, or press ] to start with the first."
+              className="m-4 py-14"
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: 12 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Body
+              index={index}
+              segment={segment}
+              total={total}
+              reviewed={reviewed}
+              isLast={isLast}
+              sopSteps={sopSteps}
+              currentTime={currentTime}
+              onChange={onChange}
+              onRevert={onRevert}
+              onConfirm={onConfirm}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
 
+function Body({ index, segment, total, reviewed, isLast, sopSteps, currentTime, onChange, onRevert, onConfirm }) {
   const isGemini = segment.source === "ai" && !segment.edited;
 
   return (
-    <Panel>
-      <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
-        <div className="flex items-center gap-2.5">
-          <Mono className="text-sm text-foreground">SEG {pad2(index + 1)}</Mono>
-          <Mono className="text-xs text-muted-foreground">of {pad2(total)}</Mono>
+    <>
+      <div className="flex items-center justify-between gap-2 border-b border-border px-5 py-4">
+        <div className="flex items-baseline gap-2">
+          <span className="text-lg font-bold">Segment {pad2(index + 1)}</span>
+          <Mono className="text-sm text-muted-foreground">/ {pad2(total)}</Mono>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {isGemini ? <GeminiChip size="xs">Gemini draft</GeminiChip> : <HumanEditedMark compact />}
           {segment.edited && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon-xs" onClick={onRevert} aria-label="Revert to Gemini draft">
+                <Button variant="ghost" size="icon-sm" onClick={onRevert} aria-label="Revert to Gemini draft" className="rounded-full">
                   <RotateCcw />
                 </Button>
               </TooltipTrigger>
@@ -55,9 +82,9 @@ export default function SegmentInspector({ index, segment, total, sopSteps, curr
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 p-4">
-        <Field label="Label">
-          <div className="grid grid-cols-4 gap-1 rounded-lg border border-border p-1" role="radiogroup" aria-label="Label">
+      <div className="flex flex-col gap-6 p-5">
+        <Field label="What happened">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Label">
             {LABELS.map((key) => {
               const meta = LABEL_META[key];
               const active = segment.label === key;
@@ -69,37 +96,34 @@ export default function SegmentInspector({ index, segment, total, sopSteps, curr
                   aria-checked={active}
                   onClick={() => onChange("label", key)}
                   className={cn(
-                    "flex h-8 items-center justify-center gap-1.5 rounded-md text-xs font-medium transition-colors duration-150",
-                    active ? "bg-elevated text-foreground shadow-[inset_0_0_0_1px_var(--border)]" : "text-muted-foreground hover:text-foreground"
+                    "flex h-11 items-center gap-2.5 rounded-xl border px-3.5 text-[15px] font-semibold transition-all duration-150",
+                    active ? meta.solid + " shadow-sm" : "border-border bg-background text-foreground/80 hover:border-border-strong hover:text-foreground"
                   )}
                 >
-                  <span className={cn("size-1.5 rounded-full", meta.dot)} aria-hidden />
+                  <span className={cn("size-2.5 rounded-full", active ? "bg-white" : meta.dot)} aria-hidden />
                   {meta.name}
+                  {active && <Check className="ml-auto size-4" strokeWidth={3} />}
                 </button>
               );
             })}
           </div>
         </Field>
 
-        <Field label="Boundaries">
+        <Field label="When" hint={<Mono>{(segment.end - segment.start).toFixed(2)}s long</Mono>}>
           <div className="flex flex-col gap-2">
             <BoundaryRow name="Start" field="start" value={segment.start} currentTime={currentTime} onChange={onChange} />
             <BoundaryRow name="End" field="end" value={segment.end} currentTime={currentTime} onChange={onChange} />
-            <div className="flex justify-between px-1 text-[11px] text-muted-foreground">
-              <span>Duration</span>
-              <Mono>{(segment.end - segment.start).toFixed(2)}s</Mono>
-            </div>
           </div>
         </Field>
 
         <Field label="SOP step">
           <Select value={String(segment.sop_step)} onValueChange={(v) => onChange("sop_step", Number(v))}>
-            <SelectTrigger className="h-9 w-full">
+            <SelectTrigger className="h-11 w-full rounded-xl bg-background text-[15px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {sopSteps.map((step, i) => (
-                <SelectItem key={i} value={String(i)}>
+                <SelectItem key={i} value={String(i)} className="text-[15px]">
                   <Mono className="text-muted-foreground">{pad2(i + 1)}</Mono>
                   <span className="truncate">{step}</span>
                 </SelectItem>
@@ -108,16 +132,13 @@ export default function SegmentInspector({ index, segment, total, sopSteps, curr
           </Select>
         </Field>
 
-        <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5">
-          <Label htmlFor="success" className="flex flex-col items-start gap-0.5">
-            <span className="text-sm font-medium">Step performed correctly</span>
-            <span className="text-[11px] font-normal text-muted-foreground">Turn off if the technique failed</span>
-          </Label>
+        <label htmlFor="success" className="flex cursor-pointer items-center justify-between rounded-xl border border-border bg-background px-4 py-3">
+          <span className="text-[15px] font-semibold">Performed correctly</span>
           <Switch id="success" checked={segment.success} onCheckedChange={(v) => onChange("success", v)} />
-        </div>
+        </label>
 
         <Field label="Anomaly">
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {[null, ...ANOMALIES].map((key) => {
               const active = segment.anomaly === key;
               return (
@@ -127,12 +148,12 @@ export default function SegmentInspector({ index, segment, total, sopSteps, curr
                   aria-pressed={active}
                   onClick={() => onChange("anomaly", key)}
                   className={cn(
-                    "h-7 rounded-full border px-2.5 text-xs transition-colors duration-150",
+                    "h-9 rounded-full border px-3.5 text-sm font-medium transition-all duration-150",
                     active
                       ? key
-                        ? "border-warning/60 bg-warning/10 text-warning"
-                        : "border-foreground/30 bg-elevated text-foreground"
-                      : "border-border text-muted-foreground hover:text-foreground"
+                        ? "border-warning bg-warning text-white"
+                        : "border-ink bg-ink text-white"
+                      : "border-border bg-background text-foreground/75 hover:border-border-strong hover:text-foreground"
                   )}
                 >
                   {key ? ANOMALY_META[key].name : "None"}
@@ -142,18 +163,25 @@ export default function SegmentInspector({ index, segment, total, sopSteps, curr
           </div>
         </Field>
       </div>
-    </Panel>
+
+      <div className="border-t border-border bg-background/60 p-4">
+        <Button onClick={onConfirm} className="h-12 w-full rounded-xl text-base font-semibold">
+          {reviewed ? "Reviewed" : segment.edited ? "Save correction" : "Looks right"}
+          {!isLast && <span className="opacity-70">· next</span>}
+          <ArrowRight data-icon="inline-end" className="size-5" />
+        </Button>
+      </div>
+    </>
   );
 }
 
-function Panel({ children }) {
-  return <section className="overflow-hidden rounded-xl border border-border bg-card">{children}</section>;
-}
-
-function Field({ label, children }) {
+function Field({ label, hint, children }) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+    <div className="flex flex-col gap-2.5">
+      <div className="flex items-baseline justify-between">
+        <span className="text-sm font-semibold text-muted-foreground">{label}</span>
+        {hint && <span className="text-[13px] text-muted-foreground">{hint}</span>}
+      </div>
       {children}
     </div>
   );
@@ -167,11 +195,12 @@ function BoundaryRow({ name, field, value, currentTime, onChange }) {
     if (draft != null && !Number.isNaN(v)) set(v);
     setDraft(null);
   }
+
   return (
     <div className="flex items-center gap-2">
-      <span className="w-9 text-xs text-muted-foreground">{name}</span>
-      <div className="flex h-9 flex-1 items-center rounded-lg border border-input">
-        <Button variant="ghost" size="icon-sm" onClick={() => set(value - NUDGE)} aria-label={`${name} −0.1s`} className="rounded-r-none">
+      <span className="w-11 text-sm font-medium text-muted-foreground">{name}</span>
+      <div className="flex h-11 flex-1 items-center rounded-xl border border-input bg-background">
+        <Button variant="ghost" size="icon" onClick={() => set(value - NUDGE)} aria-label={`${name} −0.1s`} className="size-10 rounded-l-xl rounded-r-none">
           <Minus />
         </Button>
         <input
@@ -185,16 +214,16 @@ function BoundaryRow({ name, field, value, currentTime, onChange }) {
             if (e.key === "Escape") setDraft(null);
           }}
           aria-label={`${name} time in seconds`}
-          className="h-full w-full min-w-0 bg-transparent text-center font-mono text-sm tabular-nums outline-none focus-visible:bg-elevated"
+          className="h-full w-full min-w-0 bg-transparent text-center font-mono text-base font-medium tabular-nums outline-none"
         />
-        <Button variant="ghost" size="icon-sm" onClick={() => set(value + NUDGE)} aria-label={`${name} +0.1s`} className="rounded-l-none">
+        <Button variant="ghost" size="icon" onClick={() => set(value + NUDGE)} aria-label={`${name} +0.1s`} className="size-10 rounded-l-none rounded-r-xl">
           <Plus />
         </Button>
       </div>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon" onClick={() => set(currentTime)} aria-label={`Set ${name.toLowerCase()} to playhead`} className="size-9">
-            <Crosshair />
+          <Button variant="outline" size="icon" onClick={() => set(currentTime)} aria-label={`Set ${name.toLowerCase()} to playhead`} className="size-11 rounded-xl bg-background">
+            <Crosshair className="size-4.5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Set to playhead</TooltipContent>

@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: "text-xl",
-  md: "text-3xl",
-  lg: "text-6xl",
+  sm: "text-2xl",
+  md: "text-4xl",
+  lg: "text-7xl",
 };
 
 export default function Wordmark({ size = "sm", className }) {

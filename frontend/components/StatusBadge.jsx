@@ -14,12 +14,12 @@ export default function StatusBadge({ status, className }) {
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center gap-1.5 rounded-full border border-border bg-elevated px-2.5 text-xs font-medium",
+        "inline-flex h-7 items-center gap-2 rounded-full border border-border bg-card px-3 text-[13px] font-semibold",
         meta.text,
         className
       )}
     >
-      <span className={cn("size-1.5 rounded-full", meta.dot)} aria-hidden />
+      <span className={cn("size-2 rounded-full", meta.dot)} style={{ animation: status === "in_progress" ? "live-dot 1.6s ease-in-out infinite" : undefined }} aria-hidden />
       {meta.name}
     </span>
   );

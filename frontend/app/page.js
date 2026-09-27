@@ -1,57 +1,47 @@
+import BrandFooter from "@/components/landing/BrandFooter";
 import Hero from "@/components/landing/Hero";
-import HeroBackground from "@/components/landing/HeroBackground";
-import WorkspacePreview from "@/components/landing/WorkspacePreview";
-import PageContainer from "@/components/PageContainer";
-import RoleSelect from "@/components/RoleSelect";
-import Wordmark from "@/components/Wordmark";
+import ProtocolDemo from "@/components/landing/ProtocolDemo";
+import RoleSplit from "@/components/landing/RoleSplit";
+import SpecimenMarquee from "@/components/landing/SpecimenMarquee";
+import Mono from "@/components/Mono";
+import Reveal from "@/components/Reveal";
 
-const FACTS = [
-  { value: "IoU ≥ 0.50", label: "Temporal overlap required before two raters' segments count as a match" },
-  { value: "2+ experts", label: "Independent, credential-verified reviewers on every task" },
-  { value: "100%", label: "Of edits written to an append-only audit log" },
+const READOUTS = [
+  { value: "0.50", unit: "IoU", label: "overlap to match two raters" },
+  { value: "2+", unit: "experts", label: "on every task" },
+  { value: "100", unit: "%", label: "of edits audit-logged" },
 ];
 
 export default function Home() {
   return (
-    <div className="relative flex flex-1 flex-col">
-      <HeroBackground />
+    <div className="flex flex-1 flex-col">
+      <Hero />
+      <SpecimenMarquee />
 
-      <PageContainer className="relative flex flex-col gap-24 pb-16">
-        <div className="flex flex-col gap-12">
-          <Hero />
-          <RoleSelect />
-        </div>
-
-        <section className="flex flex-col gap-8">
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">The workspace</span>
-            <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-balance">
-              Experts correct the AI. They don&apos;t start from zero.
-            </h2>
-            <p className="max-w-2xl text-balance text-muted-foreground">
-              Every segment Gemini proposes is aligned to a step in your SOP. Experts adjust boundaries,
-              labels and anomalies, and every correction is tracked against the original draft.
-            </p>
+      <section className="mx-auto w-full max-w-360 px-6 py-28 lg:px-10">
+        <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-8">
+          <h2 className="max-w-2xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.95] tracking-tight">
+            Raw footage in. Trusted data out.
+          </h2>
+          <div className="flex gap-10">
+            {READOUTS.map((r) => (
+              <div key={r.label} className="flex flex-col gap-1">
+                <span className="flex items-baseline gap-1">
+                  <Mono className="text-3xl font-semibold">{r.value}</Mono>
+                  <Mono className="text-sm text-muted-foreground">{r.unit}</Mono>
+                </span>
+                <span className="text-sm text-muted-foreground">{r.label}</span>
+              </div>
+            ))}
           </div>
-          <WorkspacePreview />
-        </section>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <ProtocolDemo />
+        </Reveal>
+      </section>
 
-        <section className="grid gap-8 border-t border-border pt-10 sm:grid-cols-3">
-          {FACTS.map((fact) => (
-            <div key={fact.value} className="flex flex-col gap-2">
-              <span className="font-mono text-2xl font-medium tracking-tight tabular-nums">{fact.value}</span>
-              <span className="text-sm text-muted-foreground">{fact.label}</span>
-            </div>
-          ))}
-        </section>
-      </PageContainer>
-
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-          <Wordmark size="sm" className="text-base text-foreground/80" />
-          <span className="font-mono text-[11px] text-muted-foreground">Built with Gemini on Google Cloud</span>
-        </div>
-      </footer>
+      <RoleSplit />
+      <BrandFooter />
     </div>
   );
 }

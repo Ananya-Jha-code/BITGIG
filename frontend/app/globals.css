@@ -14,6 +14,13 @@
 
   --color-surface: var(--card);
   --color-elevated: var(--elevated);
+  --color-paper: var(--background);
+  --color-beige: var(--beige);
+  --color-beige-deep: var(--beige-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-primary-soft: var(--primary-soft);
+  --color-border-strong: var(--border-strong);
   --color-verified: var(--verified);
   --color-gemini: var(--gemini);
   --color-success: var(--success);
@@ -52,73 +59,89 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /*
-  BITGIG dark theme. 90% neutral, 10% accent.
-  Magenta is reserved for primary actions, active/focus states and Gemini output.
+  BITGIG light theme: the brand is magenta #D6247A on beige #E8D5AE with ink #1A1A1A.
+  Paper is a lighter tint of the brand beige so long reading stays comfortable;
+  full-strength beige is saved for brand moments (marquee, footer, highlights).
 */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --background: #0b0a0c;
-  --foreground: #f2ebdd;
-  --card: #141216;
-  --card-foreground: #f2ebdd;
-  --elevated: #1c191f;
-  --popover: #1c191f;
-  --popover-foreground: #f2ebdd;
+  --background: #f7f1e5;
+  --foreground: #1a1a1a;
+  --card: #fffcf6;
+  --card-foreground: #1a1a1a;
+  --elevated: #ffffff;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+
+  --beige: #e8d5ae;
+  --beige-deep: #d9c08c;
+  --ink: #1a1a1a;
+  --ink-soft: #2a2622;
+
   --primary: #d6247a;
-  --primary-foreground: #fff8f0;
-  --secondary: #1c191f;
-  --secondary-foreground: #f2ebdd;
-  --muted: #1c191f;
-  --muted-foreground: #9a928a;
-  --accent: #231f27;
-  --accent-foreground: #f2ebdd;
-  --destructive: #d0625a;
-  --border: #2a2530;
-  --input: #2a2530;
+  --primary-foreground: #ffffff;
+  --primary-soft: #fbe3ee;
+  /* Deeper magenta for small text so it passes contrast on paper. */
+  --gemini: #b3165f;
+
+  --secondary: #efe6d4;
+  --secondary-foreground: #1a1a1a;
+  --muted: #efe6d4;
+  --muted-foreground: #6b6258;
+  --accent: #efe6d4;
+  --accent-foreground: #1a1a1a;
+  --destructive: #c2412d;
+  --border: #e5d9c1;
+  --border-strong: #cfbd96;
+  --input: #ddcfb3;
   --ring: #d6247a;
 
-  --verified: #e8d5ae;
-  /* Lighter magenta for small Gemini text, so it passes contrast on near-black. */
-  --gemini: #ef6aa7;
-  --success: #6fa98a;
-  --warning: #c9a45c;
-  --danger: #d0625a;
+  --verified: #8a6a1f;
+  --success: #2f855a;
+  --warning: #c76a0a;
+  --danger: #c2412d;
 
-  /* Timeline label colours: muted and never pink, so magenta always means Gemini. */
-  --label-aspirate: #4e9ea0;
-  --label-dispense: #6f86c9;
-  --label-transfer: #b8a27a;
-  --label-other: #6b6570;
+  /* Timeline labels: distinct from magenta, which always means Gemini. */
+  --label-aspirate: #23877f;
+  --label-dispense: #3d5db3;
+  --label-transfer: #9a7426;
+  --label-other: #857b70;
 
   --chart-1: #d6247a;
-  --chart-2: #6f86c9;
-  --chart-3: #4e9ea0;
-  --chart-4: #b8a27a;
-  --chart-5: #6b6570;
-  --radius: 0.625rem;
+  --chart-2: #3d5db3;
+  --chart-3: #23877f;
+  --chart-4: #9a7426;
+  --chart-5: #857b70;
+  --radius: 0.75rem;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: "cv11", "ss01", "ss03";
+    /* Faint paper grain so large surfaces feel printed, not flat. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.25 0 0 0 0 0.1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  html {
-    @apply font-sans;
-  }
   ::selection {
-    background: color-mix(in oklch, var(--primary) 35%, transparent);
+    background: var(--primary);
+    color: white;
   }
   :focus-visible {
     outline-color: var(--ring);
@@ -129,17 +152,56 @@
   .text-balance {
     text-wrap: balance;
   }
-  /* Soft magenta halo for Gemini-generated content. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 2px currentColor;
+  }
+  .shadow-lift {
+    box-shadow:
+      0 1px 0 rgb(26 26 26 / 0.04),
+      0 12px 32px -16px rgb(90 60 20 / 0.28);
+  }
+  .shadow-float {
+    box-shadow:
+      0 1px 0 rgb(26 26 26 / 0.04),
+      0 30px 60px -30px rgb(90 60 20 / 0.45),
+      0 0 0 1px rgb(26 26 26 / 0.04);
+  }
   .gemini-glow {
     box-shadow:
-      0 0 0 1px color-mix(in oklch, var(--primary) 45%, transparent),
-      0 0 24px -6px color-mix(in oklch, var(--primary) 45%, transparent);
+      0 0 0 1px color-mix(in oklch, var(--primary) 35%, transparent),
+      0 8px 24px -8px color-mix(in oklch, var(--primary) 45%, transparent);
   }
   .bg-grid {
     background-image:
-      linear-gradient(to right, color-mix(in oklch, var(--border) 60%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklch, var(--border) 60%, transparent) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .bg-grid-paper {
+    background-image:
+      linear-gradient(to right, color-mix(in oklch, var(--border) 70%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklch, var(--border) 70%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--danger) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
   }
 }
 
