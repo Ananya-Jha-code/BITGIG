@@ -16,6 +16,7 @@ class TaskListItem(BaseModel):
     id: str
     gig_id: str
     gig_title: str
+    video_url: str | None
     data_type: DataType
     required_specialty: str | None
     pay_per_task: float

@@ -82,6 +82,7 @@ class DashboardOut(BaseModel):
 
 class ExportTask(BaseModel):
     task_id: str
+    video_url: str | None
     source: str  # "adjudicated" | "consensus"
     annotator_id: str
     segments: list[Segment]
