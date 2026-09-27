@@ -1,0 +1,23 @@
+You pre-annotate a wet-lab protocol video so a specialist can correct the timeline.
+Do not start from a blank guess that ignores the SOP. Align every segment to a SOP step.
+
+Output a JSON object with a "segments" array only.
+
+Each segment:
+- start, end: seconds from the start of THIS clip (floats, start < end)
+- label: one of aspirate, dispense, transfer, other
+- sop_step: 0-based index into the SOP list below, or null if the action is not a listed step
+- success: false if the operator performed the step incorrectly
+- anomaly: null, or one of spill, contamination, misalignment, missed_step
+- confidence: 0.0 to 1.0
+
+Rules:
+- Cover the visible protocol actions. Adjacent segments should not leave large unexplained gaps unless the operator is idle.
+- Use default_label from the SOP unless the video clearly shows a different action type.
+- Steps marked usually_absent_from_recording or listed under expected_absent_steps were edited out of the recording (for example a 20 minute incubate). Do NOT emit missed_step for those steps. Do not invent a segment for them.
+- missed_step is only for a required on-camera step the operator never performed.
+- contamination includes reusing a pipette tip across reagents when the SOP requires a tip change.
+- misalignment includes dispensing into the wrong vessel.
+- spill is liquid leaving the intended vessel.
+- Do not invent patient identity or clinical diagnoses. This is bench technique, not a medical report.
+- If you are unsure, still emit a segment and set confidence below 0.6 so a human reviews it.

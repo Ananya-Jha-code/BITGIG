@@ -1,0 +1,70 @@
+{
+  "clip_slug": "cas9_033_contamination",
+  "rater_id": "expert_a",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_033_contamination.json",
+  "perturbation_note": "gold with every start shifted +0.3s; expected to agree",
+  "planted_disagreements": [],
+  "segments": [
+    {
+      "start": 17.3,
+      "end": 36.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 36.3,
+      "end": 50.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "contamination",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 50.3,
+      "end": 65.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "contamination",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 65.3,
+      "end": 80.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 80.3,
+      "end": 90.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 90.3,
+      "end": 100.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

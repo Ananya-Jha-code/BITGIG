@@ -1,0 +1,70 @@
+{
+  "clip_slug": "cas9_035_missed_step",
+  "rater_id": "expert_a",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_035_missed_step.json",
+  "perturbation_note": "gold with every start shifted +0.3s; expected to agree",
+  "planted_disagreements": [],
+  "segments": [
+    {
+      "start": 0.3,
+      "end": 24.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 0.5,
+      "end": 0.9,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 24.3,
+      "end": 39.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 39.3,
+      "end": 49.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 49.3,
+      "end": 56.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 56.3,
+      "end": 69.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

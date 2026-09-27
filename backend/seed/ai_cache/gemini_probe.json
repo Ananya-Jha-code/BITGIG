@@ -1,0 +1,44 @@
+{
+  "clip_slug": "gemini_probe",
+  "video": "videos/clips/gemini_probe.mp4",
+  "model": "gemini-3.1-flash-lite",
+  "prompt_version": "v1",
+  "created_at": "2026-09-27T20:48:29+00:00",
+  "needs_review": false,
+  "segments": [
+    {
+      "start": 4.6,
+      "end": 7.3,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": 1.0
+    },
+    {
+      "start": 8.0,
+      "end": 14.1,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": 1.0
+    },
+    {
+      "start": 15.6,
+      "end": 19.3,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": 1.0
+    }
+  ],
+  "error": null
+}

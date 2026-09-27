@@ -1,0 +1,79 @@
+{
+  "clip_slug": "cas9_037_correct_bench",
+  "video": "videos/clips/cas9_037_correct_bench.mp4",
+  "gig_slug": "cas9_delivery_293t",
+  "sop_id": "mock_cas9_delivery",
+  "duration_s": 64.0,
+  "source": {
+    "dataset": "YinkaiW/LSV",
+    "slice_id": "DJI-037",
+    "source_file": "DJI/DJI-Video/DJI_20250801120327_0041_D.MP4",
+    "license": "CC BY-NC 4.0",
+    "lsv_issue": null
+  },
+  "expected_absent_steps": [
+    4
+  ],
+  "segments": [
+    {
+      "start": 11.0,
+      "end": 23.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 23.0,
+      "end": 36.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 36.0,
+      "end": 48.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 48.0,
+      "end": 55.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 55.0,
+      "end": 60.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 60.0,
+      "end": 64.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

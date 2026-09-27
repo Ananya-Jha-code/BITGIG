@@ -1,0 +1,65 @@
+{
+  "clip_slug": "cas9_035_missed_step",
+  "rater_id": "expert_b",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_035_missed_step.json",
+  "perturbation_note": "gold with planted disagreements; expected to flag",
+  "planted_disagreements": [
+    "boundary shift of 2.4s on sop_step 0",
+    "label transfer -> dispense on sop_step 0",
+    "anomaly 'missed_step' dropped on sop_step 1",
+    "segment for sop_step 6 omitted entirely"
+  ],
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 24.0,
+      "label": "dispense",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 0.5,
+      "end": 0.9,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 24.0,
+      "end": 39.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 39.0,
+      "end": 49.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 49.0,
+      "end": 56.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

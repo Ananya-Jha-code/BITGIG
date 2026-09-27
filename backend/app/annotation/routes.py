@@ -23,10 +23,7 @@ from app.annotation.schemas import (
 from app.db import get_session
 from app.models import Annotation, AuditEvent, Gig, Segment, Source, Task, TaskStatus, User, utcnow
 
-try:
-    from app.ai import explain_disagreement  # Person 4's Gemini pipeline
-except ImportError:
-    explain_disagreement = None
+from app.ai import check_annotation, explain_disagreement
 
 router = APIRouter(tags=["annotation"])
 
@@ -169,6 +166,12 @@ def save_annotation(
     session.flush()  # make this annotation visible to the consensus query below
 
     if body.submit:
+        issues = check_annotation(task.ai_segments, new_segments)
+        if issues:
+            add_audit(
+                session, task_id, body.rater_id, "ai_human_disagreement",
+                None, [issue.model_dump(mode="json") for issue in issues],
+            )
         submitted = submitted_rater_annotations(session, task)
         if len(submitted) == len(task.assigned_rater_ids):
             result = task_consensus(session, task)
@@ -208,16 +211,18 @@ def get_consensus(
 
     ann_a, ann_b, score, raw_disagreements, total = result
     gig = session.get(Gig, task.gig_id)
-    sop_steps = gig.sop_steps if gig is not None else []
+    sop_for_explain: list | dict = []
+    if gig is not None:
+        sop_for_explain = (gig.label_schema or {}).get("sop") or gig.sop_steps
 
     disagreements: list[Disagreement] = []
     for index, d in enumerate(raw_disagreements):
         explanation: str | None = None
-        if explain and explain_disagreement is not None:
+        if explain:
             try:
-                explanation = explain_disagreement(d["segment_a"], d["segment_b"], sop_steps)
+                explanation = explain_disagreement(d["segment_a"], d["segment_b"], sop_for_explain)
             except Exception:
-                explanation = None  # never let a failing AI call break the review screen
+                explanation = None
         disagreements.append(Disagreement(
             index=index,
             reasons=d["reasons"],
