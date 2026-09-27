@@ -330,6 +330,7 @@ def export_gig(gig_id: str, session: Session = Depends(get_session)) -> ExportOu
             source = "consensus"
         exported.append(ExportTask(
             task_id=task.id,
+            video_url=task.video_url or gig.video_url,
             source=source,
             annotator_id=final.rater_id,
             segments=[Segment.model_validate(s) for s in final.segments],

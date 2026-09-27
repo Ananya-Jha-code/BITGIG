@@ -140,6 +140,7 @@ def _build_from_manifest() -> list:
                 Task(
                     id=task_id,
                     gig_id=gig_id,
+                    video_url=f"/demo/videos/clips/{slug}.mp4",
                     assigned_rater_ids=[RATER_A, RATER_B],
                     ai_segments=ai_segments,
                     status=status,

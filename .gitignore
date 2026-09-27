@@ -1,6 +1,7 @@
 # Secrets
 .env
 .env.*
+.env.local
 backend/.env
 !.env.example
 
@@ -19,5 +20,4 @@ backend/uploads/
 # Node
 node_modules/
 .next/
-
-
+.DS_Store
