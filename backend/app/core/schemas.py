@@ -1,8 +1,10 @@
 """Request/response shapes for the core endpoints that aren't plain tables."""
 
+from typing import Literal
+
 from pydantic import BaseModel
 
-from app.models import DataType, Gig, Task, TaskStatus
+from app.models import DataType, Gig, Segment, Task, TaskStatus
 
 
 class GigDetail(BaseModel):
@@ -30,3 +32,24 @@ class TaskDetail(BaseModel):
 
     task: Task
     gig: Gig
+
+
+class SegmentVideoOut(BaseModel):
+    """Result of pre-annotating one uploaded video. No database rows are written."""
+
+    video_url: str
+    segments: list[Segment]
+    source: Literal["cache", "gemini", "none"]
+    error: str | None = None
+
+
+class ClipSegmentsOut(BaseModel):
+    """A demo clip with its SOP and AI segments, for the workspace. No database rows."""
+
+    clip_slug: str
+    title: str
+    video_url: str
+    sop_steps: list[str]
+    segments: list[Segment]
+    source: Literal["cache", "gemini", "none"]
+    error: str | None = None

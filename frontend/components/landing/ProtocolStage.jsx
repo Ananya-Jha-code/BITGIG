@@ -154,7 +154,7 @@ function Frame({ frame, i, step }) {
             transition={{ duration: 0.5, ease: EASE }}
           >
             <MousePointer2 className="size-6 fill-white text-ink" />
-            <span className="absolute top-0.5 left-7 text-sm font-bold whitespace-nowrap text-white">Dr. Sudesh Reddy</span>
+            <span className="absolute top-0.5 left-7 text-sm font-bold whitespace-nowrap text-white">Dr. Sudhesh Reddy</span>
           </motion.div>
         )}
       </AnimatePresence>

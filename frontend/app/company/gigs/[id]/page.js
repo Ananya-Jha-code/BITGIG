@@ -186,10 +186,17 @@ export default function GigDashboardPage() {
                       </span>
                     </TableCell>
                     <TableCell className="pr-6 text-right">
-                      {task.status === "flagged" && (
+                      {task.status === "flagged" ? (
                         <Button asChild size="sm" className="rounded-full px-3">
                           <Link href={`/tasks/${task.id}/review`}>
                             Review
+                            <ArrowRight data-icon="inline-end" />
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button asChild size="sm" variant="ghost" className="rounded-full px-3">
+                          <Link href={`/tasks/${task.id}`}>
+                            Open
                             <ArrowRight data-icon="inline-end" />
                           </Link>
                         </Button>

@@ -2,7 +2,7 @@
 // Flip USE_MOCKS to false to hit the real FastAPI backend at NEXT_PUBLIC_API_URL.
 import { users, DEMO_COMPANY_ID, DEMO_EXPERT_ID } from "@/mocks/users";
 import { gigs } from "@/mocks/gigs";
-import { aiSegmentsGig1, tasks } from "@/mocks/tasks";
+import { DEMO_CLIP_URL, demoClipSegments, tasks } from "@/mocks/tasks";
 import { annotations } from "@/mocks/annotations";
 import { consensusByTask } from "@/mocks/consensus";
 import { dashboardByGig } from "@/mocks/dashboard";
@@ -72,14 +72,16 @@ export function createGig(formData) {
       status: "active",
     };
     const videos = formData.getAll("videos");
+    newGig.video_url = DEMO_CLIP_URL;
     gigs.push(newGig);
-    videos.forEach((file, i) =>
+    // Static for now: every video gets the demo clip and its cached Gemini response.
+    videos.forEach((_, i) =>
       tasks.push({
         id: `task_${Date.now()}_${i + 1}`,
         gig_id: id,
-        video_url: `/uploads/${file.name}`,
+        video_url: DEMO_CLIP_URL,
         assigned_rater_ids: [],
-        ai_segments: aiSegmentsGig1,
+        ai_segments: demoClipSegments,
         status: "open",
       })
     );

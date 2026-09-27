@@ -10,7 +10,7 @@ export const users = [
   },
   {
     id: "expert_1",
-    name: "Dr. Sudesh Reddy",
+    name: "Dr. Sudhesh Reddy",
     role: "expert",
     specialty: "lab_technician",
     credential_status: "verified",

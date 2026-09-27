@@ -109,6 +109,10 @@ Core (Person 2):
 - `GET /gigs/{id}`: `{gig, tasks}`
 - `GET /tasks?specialty=...&rater_id=...`: marketplace listing (task + gig title, pay, segment count)
 - `GET /tasks/{id}`: `{task, gig}`; task includes `ai_segments`
+- `POST /ai/segment`: multipart (`video`, `sop_steps` one per line). Saves one video and returns `{video_url, segments, source}`: cached result for demo clips, else live Gemini. Writes no database rows
+- `GET /ai/clips/{clip_slug}?live=false`: a demo clip from `demo/manifest.json` with its SOP steps and AI segments (cache by default; `live=true` re-runs Gemini). Writes no database rows
+
+The frontend currently runs fully static (`USE_MOCKS` in `frontend/lib/api.js`), including the AI video: the demo clip is served from `frontend/public/demo/clips/` with its cached Gemini response in `frontend/mocks/tasks.js`, and create gig reuses both instead of uploading. The two `/ai/*` endpoints above are ready for when the live path is switched back on.
 
 Annotation (Person 3):
 - `POST /tasks/{id}/annotations`: save or submit an annotation (writes audit events)
