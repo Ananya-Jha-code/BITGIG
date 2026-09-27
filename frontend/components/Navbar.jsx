@@ -98,7 +98,7 @@ export default function Navbar() {
 
         {role && user ? (
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-3 rounded-full border border-border bg-card py-1 pr-4 pl-1">
+            <div className="flex items-center gap-3">
               <span className="flex size-8 items-center justify-center rounded-full bg-ink font-mono text-xs font-semibold text-white">
                 {initials(user.name)}
               </span>

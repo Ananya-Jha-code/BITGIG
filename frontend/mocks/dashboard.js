@@ -3,6 +3,14 @@
 // GET /gigs/{id}/dashboard is defined in shared/schema.json.
 
 export const dashboardByGig = {
+  gig_clip: {
+    gig_id: "gig_clip",
+    total_tasks: 1,
+    tasks_by_status: { open: 1, in_progress: 0, submitted: 0, flagged: 0, resolved: 0 },
+    agreement_rate: null,
+    ai_segments_accepted_rate: null,
+    flagged_items: [],
+  },
   gig_1: {
     gig_id: "gig_1",
     total_tasks: 4,

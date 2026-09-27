@@ -1,34 +1,353 @@
 {
-  "segment": {
-    "start": "float seconds",
-    "end": "float seconds",
-    "label": "aspirate | dispense | transfer | other",
-    "sop_step": "int | null (0-based)",
-    "success": "bool",
-    "anomaly": "null | spill | contamination | misalignment | missed_step",
-    "source": "ai | human",
-    "edited": "bool",
-    "confidence": "float 0-1 | null (AI only; optional)"
-  },
-  "ai_cache": {
-    "clip_slug": "string",
-    "video": "videos/clips/<clip_slug>.mp4",
-    "model": "GEMINI_MODEL value, or seed-fixture",
-    "prompt_version": "v1 | fixture-v1",
-    "created_at": "ISO-8601",
-    "needs_review": "bool",
-    "segments": ["segment"],
-    "note": "Legacy files may be a bare segment array. Reader accepts both."
-  },
-  "gold": {
-    "clip_slug": "string",
-    "segments": ["segment with source=human"],
-    "note": "Ground truth. Never copy into ai_cache as if Gemini produced it."
-  },
-  "rater": {
-    "clip_slug": "string",
-    "rater_id": "expert_a | expert_b",
-    "synthetic": true,
-    "segments": ["segment"]
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Data shapes (source of truth)",
+  "description": "Mirrored by backend/app/models.py and frontend/lib/api.js. Change all three together.",
+  "$defs": {
+    "User": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "role"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "company",
+            "expert"
+          ]
+        },
+        "specialty": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "examples": [
+            "lab_technician"
+          ]
+        },
+        "credential_status": {
+          "enum": [
+            "verified",
+            "pending"
+          ]
+        }
+      }
+    },
+    "Gig": {
+      "type": "object",
+      "required": [
+        "id",
+        "company_id",
+        "title",
+        "data_type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "company_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "data_type": {
+          "enum": [
+            "lab_video",
+            "pathology",
+            "variant"
+          ]
+        },
+        "video_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "First video of the dataset; each Task has its own"
+        },
+        "sop_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "label_schema": {
+          "type": "object"
+        },
+        "raters_required": {
+          "type": "integer",
+          "default": 2
+        },
+        "required_specialty": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pay_per_task": {
+          "type": "number"
+        },
+        "status": {
+          "enum": [
+            "processing",
+            "open",
+            "completed"
+          ]
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "required": [
+        "id",
+        "gig_id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "gig_id": {
+          "type": "string"
+        },
+        "video_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "One task per video in the gig's dataset"
+        },
+        "assigned_rater_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ai_segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Segment"
+          }
+        },
+        "status": {
+          "enum": [
+            "open",
+            "in_progress",
+            "submitted",
+            "flagged",
+            "resolved"
+          ]
+        }
+      }
+    },
+    "Annotation": {
+      "type": "object",
+      "required": [
+        "id",
+        "task_id",
+        "rater_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "rater_id": {
+          "type": "string"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Segment"
+          }
+        },
+        "submitted_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "null while still a draft"
+        }
+      }
+    },
+    "Segment": {
+      "type": "object",
+      "required": [
+        "start",
+        "end",
+        "label"
+      ],
+      "properties": {
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "label": {
+          "enum": [
+            "aspirate",
+            "dispense",
+            "transfer",
+            "other"
+          ]
+        },
+        "sop_step": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "success": {
+          "type": "boolean",
+          "default": true
+        },
+        "anomaly": {
+          "enum": [
+            null,
+            "spill",
+            "contamination",
+            "misalignment",
+            "missed_step"
+          ]
+        },
+        "source": {
+          "enum": [
+            "ai",
+            "human"
+          ]
+        },
+        "edited": {
+          "type": "boolean",
+          "default": false
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "AI only; optional"
+        }
+      }
+    },
+    "AuditEvent": {
+      "type": "object",
+      "description": "Append-only. Never update or delete.",
+      "required": [
+        "id",
+        "task_id",
+        "actor_id",
+        "action",
+        "timestamp"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "actor_id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "before": {},
+        "after": {},
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AICache": {
+      "type": "object",
+      "description": "backend/seed/ai_cache/<clip_slug>.json. Legacy files may be a bare Segment array; the reader accepts both.",
+      "properties": {
+        "clip_slug": {
+          "type": "string"
+        },
+        "video": {
+          "type": "string",
+          "description": "videos/clips/<clip_slug>.mp4"
+        },
+        "model": {
+          "type": "string",
+          "description": "GEMINI_MODEL value, or seed-fixture"
+        },
+        "prompt_version": {
+          "type": "string",
+          "examples": [
+            "v1",
+            "fixture-v1"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "needs_review": {
+          "type": "boolean"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Segment"
+          }
+        }
+      }
+    },
+    "Gold": {
+      "type": "object",
+      "description": "demo/annotations/gold/. Ground truth (source=human). Never copy into ai_cache as if Gemini produced it.",
+      "properties": {
+        "clip_slug": {
+          "type": "string"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Segment"
+          }
+        }
+      }
+    },
+    "Rater": {
+      "type": "object",
+      "description": "demo/annotations/raters/. Synthetic rater annotations used to seed consensus disagreements.",
+      "properties": {
+        "clip_slug": {
+          "type": "string"
+        },
+        "rater_id": {
+          "enum": [
+            "expert_a",
+            "expert_b"
+          ]
+        },
+        "synthetic": {
+          "const": true
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Segment"
+          }
+        }
+      }
+    }
   }
 }

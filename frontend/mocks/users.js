@@ -10,7 +10,7 @@ export const users = [
   },
   {
     id: "expert_1",
-    name: "Dr. Maya Chen",
+    name: "Dr. Sudhesh Reddy",
     role: "expert",
     specialty: "lab_technician",
     credential_status: "verified",

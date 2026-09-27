@@ -5,6 +5,28 @@ export const ANOMALIES = ["spill", "contamination", "misalignment", "missed_step
 
 export const gigs = [
   {
+    // Real LSV demo clip (served from public/demo/clips) with its cached Gemini SOP alignment.
+    id: "gig_clip",
+    company_id: "company_1",
+    title: "Cas9 delivery into 293T cells: protocol compliance",
+    data_type: "lab_video",
+    video_url: "/demo/clips/cas9_040_misalignment.mp4",
+    sop_steps: [
+      "Add reagent 1 into a sterile 1.5 mL EP tube.",
+      "Add reagent 2 into the EP tube.",
+      "Add reagent 3 into the EP tube.",
+      "Mix well.",
+      "Incubate at room temperature for 20 min.",
+      "Add the mixture dropwise into a 10 cm dish of 293T cells (~70-80% confluency).",
+      "Gently rock the dish forward and backward to mix.",
+    ],
+    label_schema: { labels: LABELS, anomalies: ANOMALIES },
+    raters_required: 2,
+    required_specialty: "lab_technician",
+    pay_per_task: 14,
+    status: "active",
+  },
+  {
     id: "gig_1",
     company_id: "company_1",
     title: "Serial dilution pipetting QC",

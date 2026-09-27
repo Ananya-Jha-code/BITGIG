@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { ArrowRight, Microscope } from "lucide-react";
-import WellPlate from "@/components/landing/WellPlate";
+import MicroscopeView from "@/components/landing/MicroscopeView";
 import Magnet from "@/components/reactbits/Magnet";
 import RotatingText from "@/components/reactbits/RotatingText";
 import { useChooseRole } from "@/lib/role";
@@ -31,16 +31,6 @@ export default function Hero() {
   return (
     <section className="mx-auto grid w-full max-w-360 items-center gap-14 px-6 pt-14 pb-20 lg:grid-cols-[1.1fr_1fr] lg:px-10 lg:pt-20">
       <div className="flex flex-col gap-9">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex items-center gap-3 font-mono text-[13px] font-medium tracking-wider text-muted-foreground uppercase"
-        >
-          <span className="size-2 rounded-full bg-primary" style={{ animation: "live-dot 1.6s ease-in-out infinite" }} />
-          Expert annotation for the life sciences
-        </motion.div>
-
         <h1 className="font-display text-[clamp(3.25rem,7vw,6.5rem)] leading-[0.92] tracking-[-0.02em]">
           <Line delay={0.1}>Gemini drafts.</Line>
           <Line delay={0.22} className="text-primary">
@@ -103,7 +93,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0, rotate: 0 }}
         transition={{ duration: 1, delay: 0.3, ease: EASE }}
       >
-        <WellPlate />
+        <MicroscopeView />
       </motion.div>
     </section>
   );

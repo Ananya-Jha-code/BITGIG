@@ -22,7 +22,7 @@ export const earningsByExpert = {
 // fee: flat USD. feePct: fraction of the amount.
 export const payoutMethods = [
   { id: "bank", name: "Bank transfer", account: "Chase •••• 4821", eta: "1–2 business days", fee: 0, feePct: 0 },
-  { id: "paypal", name: "PayPal", account: "m.chen@example.com", eta: "Within minutes", fee: 0, feePct: 0.02 },
+  { id: "paypal", name: "PayPal", account: "s.reddy@example.com", eta: "Within minutes", fee: 0, feePct: 0.02 },
   { id: "crypto", name: "Crypto (USDC)", account: "Base · 0x3f7a…9a2c", eta: "About 5 minutes", fee: 0.5, feePct: 0 },
   { id: "wise", name: "Wise", account: "Wise USD •••• 1190", eta: "Same day", fee: 0.8, feePct: 0 },
 ];

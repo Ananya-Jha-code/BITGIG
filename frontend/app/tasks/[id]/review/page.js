@@ -100,7 +100,8 @@ function Review({ task, gig, annotations, consensus, raters, me }) {
 
   const allSegments = [...annA.segments, ...annB.segments];
   const fallbackDuration = Math.ceil(Math.max(...allSegments.map((s) => s.end)) + 1.5);
-  const playback = usePlayback({ src: gig.video_url, fallbackDuration });
+  const videoUrl = task.video_url ?? gig.video_url;
+  const playback = usePlayback({ src: videoUrl, fallbackDuration });
   const { time, duration, seek } = playback;
 
   const regions = disagreements.map((d) => regionFor(d, annA, annB));
@@ -168,7 +169,7 @@ function Review({ task, gig, annotations, consensus, raters, me }) {
           <div className="overflow-hidden rounded-2xl border border-border shadow-lift">
             <VideoPlayer
               playback={playback}
-              fileName={gig.video_url?.split("/").pop() ?? "video.mp4"}
+              fileName={videoUrl?.split("/").pop() ?? "video.mp4"}
               segment={atPlayhead >= 0 ? annA.segments[atPlayhead] : null}
               segmentKey={atPlayhead}
               stepText={atPlayhead >= 0 ? gig.sop_steps[annA.segments[atPlayhead].sop_step] : null}

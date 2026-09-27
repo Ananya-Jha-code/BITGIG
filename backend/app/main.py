@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -12,7 +13,11 @@ from app.db import init_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
+    # Don't let a database outage block startup: POST /ai/segment works without it.
+    try:
+        init_db()
+    except Exception:
+        logging.getLogger(__name__).exception("init_db failed; DB-backed endpoints will error until it's reachable")
     yield
 
 

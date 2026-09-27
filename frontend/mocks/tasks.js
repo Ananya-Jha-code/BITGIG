@@ -7,7 +7,24 @@ export const aiSegmentsGig1 = [
   { start: 18.0, end: 23.5, label: "dispense", sop_step: 3, success: false, anomaly: "spill", source: "ai", edited: false },
 ];
 
+// Static demo video and the Gemini response for it (copied from backend/seed/ai_cache).
+// New gigs created in mock mode reuse these, so nothing is uploaded and no API is called.
+export const DEMO_CLIP_URL = "/demo/clips/cas9_040_misalignment.mp4";
+export const demoClipSegments = [
+  { start: 6.0, end: 13.0, label: "transfer", sop_step: 1, success: true, anomaly: null, source: "ai", edited: false },
+  { start: 13.0, end: 16.0, label: "transfer", sop_step: 2, success: true, anomaly: null, source: "ai", edited: false },
+  { start: 16.0, end: 25.0, label: "dispense", sop_step: 5, success: true, anomaly: null, source: "ai", edited: false },
+];
+
 export const tasks = [
+  {
+    id: "task_clip",
+    gig_id: "gig_clip",
+    video_url: DEMO_CLIP_URL,
+    assigned_rater_ids: [],
+    ai_segments: demoClipSegments,
+    status: "open",
+  },
   {
     id: "task_1",
     gig_id: "gig_1",
