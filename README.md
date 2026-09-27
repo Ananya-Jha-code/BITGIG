@@ -1,4 +1,4 @@
-# Handoff
+# BITGIG
 
 A marketplace for robot training data. Companies post a task spec. People complete it. Gemini sorts each clip before a human looks at it.
 
