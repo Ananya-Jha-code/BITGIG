@@ -23,7 +23,7 @@ class GeminiError(Exception):
 def get_client():
     key = api_key()
     if not key:
-        raise GeminiError("GEMINI_API_KEY or GOOGLE_API_KEY is not set")
+        raise GeminiError("BITGIG_GEMINI_KEY is not set")
     try:
         from google import genai
         from google.genai import types
