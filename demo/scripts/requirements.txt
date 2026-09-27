@@ -1,0 +1,3 @@
+# Demo dataset prep only. Not needed by the backend at runtime.
+huggingface_hub>=0.25
+imageio-ffmpeg>=0.5   # bundles an ffmpeg binary so no system install is required

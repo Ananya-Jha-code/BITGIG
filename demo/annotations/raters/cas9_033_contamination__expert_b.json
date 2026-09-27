@@ -1,0 +1,65 @@
+{
+  "clip_slug": "cas9_033_contamination",
+  "rater_id": "expert_b",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_033_contamination.json",
+  "perturbation_note": "gold with planted disagreements; expected to flag",
+  "planted_disagreements": [
+    "boundary shift of 2.4s on sop_step 0",
+    "label transfer -> dispense on sop_step 0",
+    "anomaly 'contamination' dropped on sop_step 1",
+    "segment for sop_step 6 omitted entirely"
+  ],
+  "segments": [
+    {
+      "start": 19.4,
+      "end": 36.0,
+      "label": "dispense",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 36.0,
+      "end": 50.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 50.0,
+      "end": 65.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "contamination",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 65.0,
+      "end": 80.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 80.0,
+      "end": 90.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

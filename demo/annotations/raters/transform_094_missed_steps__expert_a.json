@@ -1,0 +1,80 @@
+{
+  "clip_slug": "transform_094_missed_steps",
+  "rater_id": "expert_a",
+  "synthetic": true,
+  "derived_from": "annotations/gold/transform_094_missed_steps.json",
+  "perturbation_note": "gold with every start shifted +0.3s; expected to agree",
+  "planted_disagreements": [],
+  "segments": [
+    {
+      "start": 0.3,
+      "end": 19.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 0.5,
+      "end": 0.9,
+      "label": "other",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 19.3,
+      "end": 26.0,
+      "label": "other",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 26.3,
+      "end": 37.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 26.5,
+      "end": 26.9,
+      "label": "other",
+      "sop_step": 4,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 37.3,
+      "end": 60.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 60.3,
+      "end": 64.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

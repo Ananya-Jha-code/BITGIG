@@ -1,0 +1,304 @@
+{
+  "dataset": "LSV (Lab Safety / wet-lab protocol video dataset)",
+  "source_repo": "YinkaiW/LSV",
+  "source_url": "https://huggingface.co/datasets/YinkaiW/LSV",
+  "license": "CC BY-NC 4.0",
+  "config": "DJI",
+  "view": "third-person action camera",
+  "notes": [
+    "Step indices in this file are 0-based to match Segment.sop_step. LSV's own CSV uses 1-based s1..sN.",
+    "expected_absent_steps are SOP steps that were edited out of the recording. They are NOT errors and must not become missed_step anomalies.",
+    "step_findings is hand-authored from the LSV 'Issue (if any)' column, mapped onto our anomaly enum."
+  ],
+  "transcode": {
+    "height": 720,
+    "crf": 30,
+    "fps": 15,
+    "audio": false
+  },
+  "gigs": [
+    {
+      "gig_slug": "cas9_delivery_293t",
+      "title": "Cas9 delivery into 293T cells - protocol compliance review",
+      "sop": "sops/mock_cas9_delivery.json",
+      "required_specialty": "lab_technician",
+      "raters_required": 2,
+      "clips": [
+        {
+          "slice_id": "DJI-034",
+          "clip_slug": "cas9_034_correct",
+          "source_file": "DJI/DJI-Video/DJI_20250801071217_0017_D.MP4",
+          "source_size_mb": 351.5,
+          "duration_s": 95,
+          "scene": "TC hood",
+          "lsv_timestamps": "s1-0'00'';s2-0'20'';s3-0'34'';s4-0'53'';s5-skip;s6-1'10'';s7-1'20''",
+          "lsv_issue": null,
+          "expected_absent_steps": [4],
+          "step_findings": [],
+          "download": true
+        },
+        {
+          "slice_id": "DJI-033",
+          "clip_slug": "cas9_033_contamination",
+          "source_file": "DJI/DJI-Video/DJI_20250801070137_0015_D.MP4",
+          "source_size_mb": 367.5,
+          "duration_s": 100,
+          "scene": "TC hood",
+          "lsv_timestamps": "s1-0'17'';s2-0'36'';s3-0'50'';s4-1'05'';s5-skip;s6-1'20'';s7-1'30''",
+          "lsv_issue": "Added reagent 1/2/3 without changing the pipette tip",
+          "expected_absent_steps": [4],
+          "step_findings": [
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "contamination",
+              "note": "reagent 2 added with the tip used for reagent 1"
+            },
+            {
+              "sop_step": 2,
+              "success": false,
+              "anomaly": "contamination",
+              "note": "reagent 3 added with the same tip again"
+            }
+          ],
+          "download": true
+        },
+        {
+          "slice_id": "DJI-035",
+          "clip_slug": "cas9_035_missed_step",
+          "source_file": "DJI/DJI-Video/DJI_20250801071613_0018_D.MP4",
+          "source_size_mb": 254.5,
+          "duration_s": 69,
+          "scene": "TC hood",
+          "lsv_timestamps": "s1-0'00'';s2-skip;s3-0'24'';s4-0'39'';s5-skip;s6-0'49'';s7-0'56''",
+          "lsv_issue": "Skipped reagent 2 addition to mixture.",
+          "expected_absent_steps": [4],
+          "step_findings": [
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "reagent 2 never added; annotate as a zero-length marker at the point it should have occurred"
+            }
+          ],
+          "download": true
+        },
+        {
+          "slice_id": "DJI-040",
+          "clip_slug": "cas9_040_misalignment",
+          "source_file": "DJI/DJI-Video/DJI_20250801120638_0045_D.MP4",
+          "source_size_mb": 187.0,
+          "duration_s": 25,
+          "scene": "bench",
+          "lsv_timestamps": "s1-skip;s2-0'06'';s3-0'13'';s4-skip;s5-skip;s6-0'16'';s7-skip",
+          "lsv_issue": "Added reagent 2 to reagent 3 instead of mixing tube",
+          "expected_absent_steps": [4],
+          "step_findings": [
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "misalignment",
+              "note": "dispensed into the reagent 3 stock tube instead of the mixing tube"
+            }
+          ],
+          "download": true
+        },
+        {
+          "slice_id": "DJI-038",
+          "clip_slug": "cas9_038_combo",
+          "source_file": "DJI/DJI-Video/DJI_20250801120513_0043_D.MP4",
+          "source_size_mb": 253.6,
+          "duration_s": 34,
+          "scene": "bench",
+          "lsv_timestamps": "s1-0'00'';s2-0'12'';s3-skip;s4-skip;s5-skip;s6-0'28'';s7-skip",
+          "lsv_issue": "Added reagent 1/2 without changing pipette tip and skipped reagent 3.",
+          "expected_absent_steps": [4],
+          "step_findings": [
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "contamination",
+              "note": "reagent 2 added with the reagent 1 tip"
+            },
+            {
+              "sop_step": 2,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "reagent 3 never added"
+            }
+          ],
+          "download": true
+        },
+        {
+          "slice_id": "DJI-036",
+          "clip_slug": "cas9_036_missed_dropwise",
+          "source_file": "DJI/DJI-Video/DJI_20250801071835_0019_D.MP4",
+          "source_size_mb": 345.3,
+          "duration_s": 94,
+          "scene": "TC hood",
+          "lsv_timestamps": "s1-0'00'';s2-0'33'';s3-0'55'';s4-1'14'';s5-skip;s6-skip;s7-1'25''",
+          "lsv_issue": "Skipped dropwise mixture addition to 293T cells.",
+          "expected_absent_steps": [4],
+          "step_findings": [
+            {
+              "sop_step": 5,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "mixture never added to the dish"
+            }
+          ],
+          "download": false
+        },
+        {
+          "slice_id": "DJI-037",
+          "clip_slug": "cas9_037_correct_bench",
+          "source_file": "DJI/DJI-Video/DJI_20250801120327_0041_D.MP4",
+          "source_size_mb": 481.7,
+          "duration_s": 64,
+          "scene": "bench",
+          "lsv_timestamps": "s1-0'11'';s2-0'23'';s3-0'36'';s4-0'48'';s5-skip;s6-0'55'';s7-1'00''",
+          "lsv_issue": null,
+          "expected_absent_steps": [4],
+          "step_findings": [],
+          "download": false
+        },
+        {
+          "slice_id": "DJI-039",
+          "clip_slug": "cas9_039_wrong_vessel",
+          "source_file": "DJI/DJI-Video/DJI_20250801120553_0044_D.MP4",
+          "source_size_mb": 282.0,
+          "duration_s": 38,
+          "scene": "bench",
+          "lsv_timestamps": "s1-0'00'';s2-0'17'';s3-0'22'';s4-skip;s5-skip;s6-skip;s7-0'31''",
+          "lsv_issue": "Added reagents 1/2/3 to the plate directly, without mixing",
+          "expected_absent_steps": [4],
+          "step_findings": [
+            {
+              "sop_step": 0,
+              "success": false,
+              "anomaly": "misalignment",
+              "note": "reagent 1 dispensed into the plate, not the EP tube"
+            },
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "misalignment",
+              "note": "reagent 2 dispensed into the plate"
+            },
+            {
+              "sop_step": 2,
+              "success": false,
+              "anomaly": "misalignment",
+              "note": "reagent 3 dispensed into the plate"
+            },
+            {
+              "sop_step": 3,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "no mixing step performed"
+            }
+          ],
+          "download": false
+        }
+      ]
+    },
+    {
+      "gig_slug": "bacterial_transformation",
+      "title": "Bacterial transformation - heat shock timing audit",
+      "sop": "sops/mock_transformation.json",
+      "required_specialty": "lab_technician",
+      "raters_required": 2,
+      "clips": [
+        {
+          "slice_id": "DJI-092",
+          "clip_slug": "transform_092_correct",
+          "source_file": "DJI/DJI-Video/DJI_20250820175319_0006_D.MP4",
+          "source_size_mb": 646.4,
+          "duration_s": 88,
+          "scene": "bench",
+          "lsv_timestamps": "s1-0'0'';s2-0'28'';s3-0'32'';s4-0'38'';s5-0'50'';s6-0'58'';s7-1'25''",
+          "lsv_issue": null,
+          "expected_absent_steps": [],
+          "step_findings": [],
+          "download": false
+        },
+        {
+          "slice_id": "DJI-094",
+          "clip_slug": "transform_094_missed_steps",
+          "source_file": "DJI/DJI-Video/DJI_20250820175808_0009_D.MP4",
+          "source_size_mb": null,
+          "duration_s": 64,
+          "scene": "bench",
+          "lsv_timestamps": "s1-0'0'';s3-0'19'';s4-0'26'';s6-0'37'';s7-1'00''",
+          "lsv_issue": "Skipped step 2 and step 5 in Mock_Transformation.txt",
+          "expected_absent_steps": [],
+          "step_findings": [
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "tube never flicked to mix"
+            },
+            {
+              "sop_step": 4,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "tube not returned to ice after heat shock"
+            }
+          ],
+          "download": false
+        },
+        {
+          "slice_id": "DJI-095",
+          "clip_slug": "transform_095_incomplete_spread",
+          "source_file": "DJI/DJI-Video/DJI_20250820180015_0010_D.MP4",
+          "source_size_mb": null,
+          "duration_s": 64,
+          "scene": "bench",
+          "lsv_timestamps": "s1-0'0'';s3-0'22'';s4-0'26'';s5-0'37'';s6-0'45'';s7-1'00''",
+          "lsv_issue": "Skipped step 2 in Mock_Transformation.txt and Skipped spreading E. coli on the plate in step 6.",
+          "expected_absent_steps": [],
+          "step_findings": [
+            {
+              "sop_step": 1,
+              "success": false,
+              "anomaly": "missed_step",
+              "note": "tube never flicked to mix"
+            },
+            {
+              "sop_step": 5,
+              "success": false,
+              "anomaly": null,
+              "note": "culture applied to the plate but never spread; step attempted, outcome failed"
+            }
+          ],
+          "download": false
+        }
+      ]
+    }
+  ],
+  "broll": [
+    {
+      "slice_id": "DJI-082",
+      "clip_slug": "broll_cancer_passaging_drug_treatment",
+      "source_file": "DJI/DJI-Video/DJI_20250816173300_0043_D.MP4",
+      "scene": "TC hood",
+      "operation": "Cancer cell lines passaging and drug treatment",
+      "has_sop": false,
+      "has_gold": false,
+      "use": "pitch footage and live Gemini demo only; LSV ships no protocol or timestamps for this slice",
+      "download": false
+    },
+    {
+      "slice_id": "DJI-084",
+      "clip_slug": "broll_splitting_cancer_cells",
+      "source_file": "DJI/DJI-Video/DJI_20250819152106_0012_D.MP4",
+      "scene": "TC hood",
+      "operation": "Splitting cancer cells in 6-well plate",
+      "has_sop": false,
+      "has_gold": false,
+      "use": "pitch footage only",
+      "download": false
+    }
+  ]
+}

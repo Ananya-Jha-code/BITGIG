@@ -1,0 +1,60 @@
+{
+  "clip_slug": "cas9_039_wrong_vessel",
+  "rater_id": "expert_a",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_039_wrong_vessel.json",
+  "perturbation_note": "gold with every start shifted +0.3s; expected to agree",
+  "planted_disagreements": [],
+  "segments": [
+    {
+      "start": 0.3,
+      "end": 17.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 17.3,
+      "end": 22.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 22.3,
+      "end": 31.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 22.5,
+      "end": 22.9,
+      "label": "other",
+      "sop_step": 3,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 31.3,
+      "end": 38.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

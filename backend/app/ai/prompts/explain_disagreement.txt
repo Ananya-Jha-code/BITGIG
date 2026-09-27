@@ -1,0 +1,5 @@
+Two specialists labeled the same lab-protocol clip. Their segments disagree.
+Write 2-4 short sentences a reviewer can read instead of rewatching the whole video.
+Name the time range, the SOP step if known, and what differs (label, success, anomaly, or boundaries).
+Do not invent footage that is not implied by the two segments. Do not mention payments.
+If only one rater has a segment, say that the other rater has no matching interval.

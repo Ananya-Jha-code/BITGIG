@@ -1,0 +1,75 @@
+{
+  "clip_slug": "transform_092_correct",
+  "rater_id": "expert_b",
+  "synthetic": true,
+  "derived_from": "annotations/gold/transform_092_correct.json",
+  "perturbation_note": "gold with planted disagreements; expected to flag",
+  "planted_disagreements": [
+    "boundary shift of 2.4s on sop_step 0",
+    "label transfer -> dispense on sop_step 0",
+    "spurious spill added on sop_step 0",
+    "segment for sop_step 6 omitted entirely"
+  ],
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 28.0,
+      "label": "dispense",
+      "sop_step": 0,
+      "success": false,
+      "anomaly": "spill",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 28.0,
+      "end": 32.0,
+      "label": "other",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 32.0,
+      "end": 38.0,
+      "label": "other",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 38.0,
+      "end": 50.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 50.0,
+      "end": 58.0,
+      "label": "other",
+      "sop_step": 4,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 58.0,
+      "end": 85.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

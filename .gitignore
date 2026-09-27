@@ -1,9 +1,23 @@
+# Secrets
 .env
+.env.*
 .env.local
+backend/.env
+!.env.example
+
+# Demo dataset: full-size LSV downloads. Committed clips live in demo/videos/clips/.
+demo/videos/raw/*
+!demo/videos/raw/.gitkeep
+demo/sops/lsv_original/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
+venv/
+backend/uploads/
+
+# Node
 node_modules/
 .next/
 .DS_Store
-backend/uploads/

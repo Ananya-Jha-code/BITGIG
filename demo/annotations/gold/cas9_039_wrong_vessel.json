@@ -1,0 +1,69 @@
+{
+  "clip_slug": "cas9_039_wrong_vessel",
+  "video": "videos/clips/cas9_039_wrong_vessel.mp4",
+  "gig_slug": "cas9_delivery_293t",
+  "sop_id": "mock_cas9_delivery",
+  "duration_s": 38.0,
+  "source": {
+    "dataset": "YinkaiW/LSV",
+    "slice_id": "DJI-039",
+    "source_file": "DJI/DJI-Video/DJI_20250801120553_0044_D.MP4",
+    "license": "CC BY-NC 4.0",
+    "lsv_issue": "Added reagents 1/2/3 to the plate directly, without mixing"
+  },
+  "expected_absent_steps": [
+    4
+  ],
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 17.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 17.0,
+      "end": 22.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 22.0,
+      "end": 31.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 22.5,
+      "end": 22.9,
+      "label": "other",
+      "sop_step": 3,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 31.0,
+      "end": 38.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

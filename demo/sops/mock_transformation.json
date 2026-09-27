@@ -1,0 +1,57 @@
+{
+  "sop_id": "mock_transformation",
+  "title": "Bacterial transformation by heat shock",
+  "source": {
+    "dataset": "YinkaiW/LSV",
+    "file": "DJI/DJI-Protocol/Mock_Transformation.txt",
+    "license": "CC BY-NC 4.0"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "text": "Add 5 uL of plasmid DNA to the competent E. coli cells.",
+      "default_label": "transfer",
+      "vessel": "competent cell tube"
+    },
+    {
+      "index": 1,
+      "text": "Mix gently by flicking the tube 4-5 times.",
+      "default_label": "other",
+      "vessel": "competent cell tube"
+    },
+    {
+      "index": 2,
+      "text": "Incubate the DNA-cell mixture on ice for 5 seconds.",
+      "default_label": "other",
+      "vessel": "ice bucket"
+    },
+    {
+      "index": 3,
+      "text": "Rapidly transfer the tube to a pre-heated 42C water bath for exactly 5 seconds.",
+      "default_label": "other",
+      "vessel": "42C water bath",
+      "timing_critical": true,
+      "expected_duration_s": 5
+    },
+    {
+      "index": 4,
+      "text": "Immediately return the tube to ice for 5 seconds.",
+      "default_label": "other",
+      "vessel": "ice bucket",
+      "timing_critical": true,
+      "expected_duration_s": 5
+    },
+    {
+      "index": 5,
+      "text": "Spread 50 uL of culture onto an LB agar plate containing the appropriate selective antibiotic.",
+      "default_label": "dispense",
+      "vessel": "LB agar plate"
+    },
+    {
+      "index": 6,
+      "text": "Invert the plates.",
+      "default_label": "other",
+      "vessel": "LB agar plate"
+    }
+  ]
+}

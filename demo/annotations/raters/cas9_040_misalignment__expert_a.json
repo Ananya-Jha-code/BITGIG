@@ -1,0 +1,40 @@
+{
+  "clip_slug": "cas9_040_misalignment",
+  "rater_id": "expert_a",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_040_misalignment.json",
+  "perturbation_note": "gold with every start shifted +0.3s; expected to agree",
+  "planted_disagreements": [],
+  "segments": [
+    {
+      "start": 6.3,
+      "end": 13.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": false,
+      "anomaly": "misalignment",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 13.3,
+      "end": 16.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 16.3,
+      "end": 25.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "clip_slug": "cas9_036_missed_dropwise",
+  "rater_id": "expert_b",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_036_missed_dropwise.json",
+  "perturbation_note": "gold with planted disagreements; expected to flag",
+  "planted_disagreements": [
+    "boundary shift of 2.4s on sop_step 0",
+    "label transfer -> dispense on sop_step 0",
+    "anomaly 'missed_step' dropped on sop_step 5",
+    "segment for sop_step 6 omitted entirely"
+  ],
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 33.0,
+      "label": "dispense",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 33.0,
+      "end": 55.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 55.0,
+      "end": 74.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 74.0,
+      "end": 85.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 74.5,
+      "end": 74.9,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

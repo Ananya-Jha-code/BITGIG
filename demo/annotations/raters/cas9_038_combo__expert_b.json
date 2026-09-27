@@ -1,0 +1,45 @@
+{
+  "clip_slug": "cas9_038_combo",
+  "rater_id": "expert_b",
+  "synthetic": true,
+  "derived_from": "annotations/gold/cas9_038_combo.json",
+  "perturbation_note": "gold with planted disagreements; expected to flag",
+  "planted_disagreements": [
+    "boundary shift of 2.4s on sop_step 0",
+    "label transfer -> dispense on sop_step 0",
+    "anomaly 'contamination' dropped on sop_step 1",
+    "segment for sop_step 5 omitted entirely"
+  ],
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 12.0,
+      "label": "dispense",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 12.0,
+      "end": 28.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 12.5,
+      "end": 12.9,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    }
+  ]
+}

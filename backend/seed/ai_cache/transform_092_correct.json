@@ -1,0 +1,88 @@
+{
+  "clip_slug": "transform_092_correct",
+  "video": "videos/clips/transform_092_correct.mp4",
+  "model": "seed-fixture",
+  "prompt_version": "fixture-v1",
+  "created_at": "2026-09-27T20:35:25+00:00",
+  "needs_review": true,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 28.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    },
+    {
+      "start": 28.0,
+      "end": 32.0,
+      "label": "other",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    },
+    {
+      "start": 32.0,
+      "end": 38.0,
+      "label": "other",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    },
+    {
+      "start": 38.0,
+      "end": 50.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    },
+    {
+      "start": 50.0,
+      "end": 58.0,
+      "label": "other",
+      "sop_step": 4,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    },
+    {
+      "start": 58.0,
+      "end": 85.0,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    },
+    {
+      "start": 85.0,
+      "end": 88.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "ai",
+      "edited": false,
+      "confidence": null
+    }
+  ],
+  "error": null
+}

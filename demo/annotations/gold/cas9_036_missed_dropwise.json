@@ -1,0 +1,79 @@
+{
+  "clip_slug": "cas9_036_missed_dropwise",
+  "video": "videos/clips/cas9_036_missed_dropwise.mp4",
+  "gig_slug": "cas9_delivery_293t",
+  "sop_id": "mock_cas9_delivery",
+  "duration_s": 94.0,
+  "source": {
+    "dataset": "YinkaiW/LSV",
+    "slice_id": "DJI-036",
+    "source_file": "DJI/DJI-Video/DJI_20250801071835_0019_D.MP4",
+    "license": "CC BY-NC 4.0",
+    "lsv_issue": "Skipped dropwise mixture addition to 293T cells."
+  },
+  "expected_absent_steps": [
+    4
+  ],
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 33.0,
+      "label": "transfer",
+      "sop_step": 0,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 33.0,
+      "end": 55.0,
+      "label": "transfer",
+      "sop_step": 1,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 55.0,
+      "end": 74.0,
+      "label": "transfer",
+      "sop_step": 2,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 74.0,
+      "end": 85.0,
+      "label": "other",
+      "sop_step": 3,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 74.5,
+      "end": 74.9,
+      "label": "dispense",
+      "sop_step": 5,
+      "success": false,
+      "anomaly": "missed_step",
+      "source": "human",
+      "edited": false
+    },
+    {
+      "start": 85.0,
+      "end": 94.0,
+      "label": "other",
+      "sop_step": 6,
+      "success": true,
+      "anomaly": null,
+      "source": "human",
+      "edited": false
+    }
+  ]
+}
