@@ -35,7 +35,7 @@ DEMO_DIR = REPO_ROOT / "demo"
 
 
 def api_key() -> str | None:
-    key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    key = os.getenv("BITGIG_GEMINI_KEY")
     if key is None:
         return None
     key = key.strip()

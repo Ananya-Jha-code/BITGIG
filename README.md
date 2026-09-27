@@ -9,7 +9,7 @@ This is not Encord. Encord’s Gemini draws boxes and captions. This Gemini outp
 | Piece | Status |
 | --- | --- |
 | FastAPI gigs, tasks, annotations, consensus, dashboard, export | Live (`backend/`) |
-| Gemini `segment_video` (Files API + structured JSON) | Live code; needs `GEMINI_API_KEY` and a clip file |
+| Gemini `segment_video` (Files API + structured JSON) | Live code; needs `BITGIG_GEMINI_KEY` and a clip file |
 | AI cache `backend/seed/ai_cache/<clip_slug>.json` | Live reader (envelope or legacy array) |
 | Seed-fixture cache | Offline timelines from LSV clocks + SOP `default_label`. Not gold. Not a Gemini transcript. `model: seed-fixture` |
 | Gold JSON | Human ground truth from LSV clocks + hand `step_findings` |
@@ -34,7 +34,7 @@ cd BITGIG
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # set DATABASE_URL; optional GEMINI_API_KEY
+cp .env.example .env   # set DATABASE_URL; optional BITGIG_GEMINI_KEY
 python -m seed.load
 uvicorn app.main:app --reload --port 8000
 ```

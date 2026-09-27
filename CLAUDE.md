@@ -176,7 +176,7 @@ Update this section if commands change.
 
 Store these in `.env` files that are gitignored. Never commit secrets.
 
-- `GEMINI_API_KEY` (or `GOOGLE_API_KEY`)
+- `BITGIG_GEMINI_KEY` (Gemini API key; custom name so the SDK does not auto-read `GEMINI_API_KEY`/`GOOGLE_API_KEY`)
 - `GEMINI_MODEL` (optional; default in `backend/app/ai/config.py`)
 - `GOOGLE_CLOUD_PROJECT`
 - `DATABASE_URL` (Supabase Postgres connection string, Session pooler)

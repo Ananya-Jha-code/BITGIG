@@ -96,7 +96,7 @@ def segment_video(
         return _empty_result(
             clip_slug=slug,
             video=video_uri,
-            error="GEMINI_API_KEY or GOOGLE_API_KEY is not set",
+            error="BITGIG_GEMINI_KEY is not set",
         )
 
     path = _resolve_video(video_uri)
