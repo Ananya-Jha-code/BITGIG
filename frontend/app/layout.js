@@ -1,4 +1,4 @@
-import { Archivo, Archivo_Black, Caveat, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo_Black, Caveat, Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,13 +13,6 @@ const archivoBlack = Archivo_Black({
   variable: "--font-archivo-black",
   weight: "400",
   subsets: ["latin"],
-});
-
-// Variable Archivo (weight + width axes) for the interactive hero headline.
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  axes: ["wdth"],
 });
 
 // Handwriting for the expert's pen marks.
@@ -43,7 +36,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${archivoBlack.variable} ${archivo.variable} ${caveat.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${archivoBlack.variable} ${caveat.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <TooltipProvider delayDuration={200}>

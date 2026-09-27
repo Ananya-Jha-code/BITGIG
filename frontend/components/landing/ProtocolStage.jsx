@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Check, MousePointer2, Sparkles } from "lucide-react";
+import { Check, FileVideo, MousePointer2, Sparkles } from "lucide-react";
 import Mono from "@/components/Mono";
 import { cn } from "@/lib/utils";
 
@@ -24,13 +24,6 @@ const SEGMENTS = [
 
 const SOP = ["Pick up from tube A", "Add to B1, mix 3×", "Move to B2", "Add to B2, mix 3×"];
 
-const CAPTIONS = [
-  { left: "serial_dilution.mp4", right: "uploading" },
-  { left: "Gemini", right: "4 actions found, each matched to a step", gemini: true },
-  { left: "Dr. Maya Chen", right: "reviewing Gemini's draft" },
-  { left: "2 experts", right: "1 disagreement" },
-];
-
 const pct = (t) => (t / DURATION) * 100;
 
 // Maya's correction: the "Add" ends 1.4 s later, so "Move" starts later too.
@@ -45,28 +38,9 @@ function segmentsFor(lane, step) {
 }
 
 export default function ProtocolStage({ step }) {
-  const caption = CAPTIONS[step];
-
   return (
     <div className="flex flex-col border-t border-border pt-6">
-      <div className="flex h-8 items-center gap-3 text-base">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25 }}
-            className="flex items-center gap-2.5"
-          >
-            {caption.gemini && <Sparkles className="size-4 text-gemini" />}
-            <span className={cn("font-semibold", caption.gemini && "text-gemini")}>{caption.left}</span>
-            <span className="text-muted-foreground">{caption.right}</span>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      <div className="mt-8 grid grid-cols-[5.5rem_1fr] gap-x-6">
+      <div className="mt-6 grid grid-cols-[5.5rem_1fr] gap-x-6">
         {/* Ruler */}
         <span />
         <div className="relative h-7">
@@ -138,17 +112,12 @@ export default function ProtocolStage({ step }) {
 
       <div className="mt-10 min-h-16 border-t border-border pt-5">
         <AnimatePresence mode="wait">
-          {step === 2 && (
-            <motion.p key="edit" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ delay: 1.4 }} className="font-mono text-sm text-muted-foreground">
-              step 02 end · 11.0 s → <span className="font-semibold text-foreground">12.4 s</span> · saved to the audit log
-            </motion.p>
-          )}
           {step === 3 && (
             <motion.div key="explain" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-wrap items-baseline justify-between gap-4">
               <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }} className="flex items-baseline gap-2 text-lg">
                 <Sparkles className="size-4 translate-y-0.5 text-gemini" />
                 <span>
-                  <span className="font-semibold text-gemini">Gemini:</span> the SOP says mix 3×. Expert A caught the third mix.
+                  SOP says mix 3× · <span className="font-semibold">Expert A is right</span>
                 </span>
               </motion.p>
               <motion.span
@@ -175,6 +144,21 @@ function Lane({ segments, visible, step, lane }) {
   return (
     <div className="relative h-16">
       <div className="absolute inset-x-0 top-1/2 h-px bg-ink/10" />
+
+      {lane === "a" && step === 0 && (
+        <motion.div
+          className="absolute inset-y-3 z-10 flex items-center gap-2 rounded-full bg-ink pr-4 pl-3 text-sm font-semibold text-white"
+          initial={{ left: "-10%", opacity: 0 }}
+          animate={{ left: "0%", opacity: 1 }}
+          transition={{ duration: 0.6, ease: EASE }}
+        >
+          <FileVideo className="size-4" />
+          serial_dilution.mp4
+          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 2.4, type: "spring", stiffness: 400, damping: 18 }}>
+            <Check className="size-4 text-success" strokeWidth={3} />
+          </motion.span>
+        </motion.div>
+      )}
 
       {lane === "a" && step === 1 && (
         <motion.div
@@ -231,7 +215,7 @@ function Lane({ segments, visible, step, lane }) {
             animate={{ opacity: 1, y: 0, rotate: -4 }}
             transition={{ delay: 1.3, duration: 0.45, ease: EASE }}
           >
-            ↖ +1.4 s, third mix
+            ↖ +1.4 s
           </motion.span>
         </>
       )}
