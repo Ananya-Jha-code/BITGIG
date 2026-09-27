@@ -1,9 +1,14 @@
+import PageContainer from "@/components/PageContainer";
+import PageHeader from "@/components/PageHeader";
+import EmptyState from "@/components/EmptyState";
+import { Hammer } from "lucide-react";
+
 // Placeholder for routes that exist in the nav but are not built yet.
 export default function ComingSoon({ title, description }) {
   return (
-    <div className="flex flex-col gap-3">
-      <h1 className="text-4xl">{title}</h1>
-      <p className="text-muted-foreground">{description}</p>
-    </div>
+    <PageContainer className="flex flex-col gap-8">
+      <PageHeader title={title} description={description} />
+      <EmptyState icon={Hammer} title="Being built" description="This screen is next in the redesign." />
+    </PageContainer>
   );
 }

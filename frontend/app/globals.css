@@ -8,7 +8,22 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
-  --font-heading: var(--font-archivo-black);
+  --font-heading: var(--font-inter);
+  --font-display: var(--font-archivo-black);
+  --font-mono: var(--font-jetbrains-mono);
+
+  --color-surface: var(--card);
+  --color-elevated: var(--elevated);
+  --color-verified: var(--verified);
+  --color-gemini: var(--gemini);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-label-aspirate: var(--label-aspirate);
+  --color-label-dispense: var(--label-dispense);
+  --color-label-transfer: var(--label-transfer);
+  --color-label-other: var(--label-other);
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -39,32 +54,52 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* BITGIG theme: magenta on beige. Single light theme, no dark mode. */
+/*
+  BITGIG dark theme. 90% neutral, 10% accent.
+  Magenta is reserved for primary actions, active/focus states and Gemini output.
+*/
 :root {
-  --background: #e8d5ae;
-  --foreground: #1a1a1a;
-  --card: #f3e8d0;
-  --card-foreground: #1a1a1a;
-  --popover: #f3e8d0;
-  --popover-foreground: #1a1a1a;
+  color-scheme: dark;
+
+  --background: #0b0a0c;
+  --foreground: #f2ebdd;
+  --card: #141216;
+  --card-foreground: #f2ebdd;
+  --elevated: #1c191f;
+  --popover: #1c191f;
+  --popover-foreground: #f2ebdd;
   --primary: #d6247a;
-  --primary-foreground: #fff8ee;
-  --secondary: #dcc596;
-  --secondary-foreground: #1a1a1a;
-  --muted: #dcc596;
-  --muted-foreground: #5c5040;
-  --accent: #dcc596;
-  --accent-foreground: #1a1a1a;
-  --destructive: #b42318;
-  --border: #cdb482;
-  --input: #cdb482;
+  --primary-foreground: #fff8f0;
+  --secondary: #1c191f;
+  --secondary-foreground: #f2ebdd;
+  --muted: #1c191f;
+  --muted-foreground: #9a928a;
+  --accent: #231f27;
+  --accent-foreground: #f2ebdd;
+  --destructive: #d0625a;
+  --border: #2a2530;
+  --input: #2a2530;
   --ring: #d6247a;
+
+  --verified: #e8d5ae;
+  /* Lighter magenta for small Gemini text, so it passes contrast on near-black. */
+  --gemini: #ef6aa7;
+  --success: #6fa98a;
+  --warning: #c9a45c;
+  --danger: #d0625a;
+
+  /* Timeline label colours: muted and never pink, so magenta always means Gemini. */
+  --label-aspirate: #4e9ea0;
+  --label-dispense: #6f86c9;
+  --label-transfer: #b8a27a;
+  --label-other: #6b6570;
+
   --chart-1: #d6247a;
-  --chart-2: #1a1a1a;
-  --chart-3: #8c6d3f;
-  --chart-4: #e27ba9;
-  --chart-5: #5c5040;
-  --radius: 0.75rem;
+  --chart-2: #6f86c9;
+  --chart-3: #4e9ea0;
+  --chart-4: #b8a27a;
+  --chart-5: #6b6570;
+  --radius: 0.625rem;
 }
 
 @layer base {
@@ -73,6 +108,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -81,9 +117,37 @@
   html {
     @apply font-sans;
   }
-  h1,
-  h2,
-  h3 {
-    @apply font-heading tracking-tight;
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+  :focus-visible {
+    outline-color: var(--ring);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* Soft magenta halo for Gemini-generated content. */
+  .gemini-glow {
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--primary) 45%, transparent),
+      0 0 24px -6px color-mix(in oklch, var(--primary) 45%, transparent);
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklch, var(--border) 60%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklch, var(--border) 60%, transparent) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

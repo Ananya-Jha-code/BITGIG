@@ -1,12 +1,13 @@
 // All backend calls go through this file.
 // Flip USE_MOCKS to false to hit the real FastAPI backend at NEXT_PUBLIC_API_URL.
-import { users } from "@/mocks/users";
+import { users, DEMO_COMPANY_ID, DEMO_EXPERT_ID } from "@/mocks/users";
 import { gigs } from "@/mocks/gigs";
 import { tasks } from "@/mocks/tasks";
 import { annotations } from "@/mocks/annotations";
 import { consensusByTask } from "@/mocks/consensus";
 import { dashboardByGig } from "@/mocks/dashboard";
 import { earningsByExpert } from "@/mocks/earnings";
+import { issuesByGig } from "@/mocks/aiIssues";
 
 export const USE_MOCKS = true;
 
@@ -35,6 +36,13 @@ async function request(path, options = {}) {
 }
 
 // ---------- Core (Person 2) ----------
+
+// Until Firebase Auth lands, the chosen role maps to a fixed demo user.
+export function getCurrentUser(role) {
+  const id = role === "company" ? DEMO_COMPANY_ID : role === "expert" ? DEMO_EXPERT_ID : null;
+  if (!id) return Promise.resolve(null);
+  return getUser(id);
+}
 
 export function getUser(id) {
   if (USE_MOCKS) return mock(users.find((u) => u.id === id) ?? null);
@@ -81,6 +89,17 @@ export function listTasks(specialty) {
 export function getTask(id) {
   if (USE_MOCKS) return mock(tasks.find((t) => t.id === id) ?? null);
   return request(`/tasks/${id}`);
+}
+
+// ---------- AI (Person 4, surfaced through the backend) ----------
+
+// Gemini's review of the current annotation (check_annotation). Endpoint not defined yet.
+export function checkAnnotation(taskId, gigId, segments) {
+  if (USE_MOCKS) return mock(issuesByGig[gigId] ?? []);
+  return request(`/tasks/${taskId}/check`, {
+    method: "POST",
+    body: JSON.stringify({ segments }),
+  });
 }
 
 // ---------- Annotation (Person 3) ----------

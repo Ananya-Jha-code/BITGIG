@@ -1,5 +1,7 @@
-import { Archivo_Black, Inter } from "next/font/google";
+import { Archivo_Black, Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,23 +15,29 @@ const archivoBlack = Archivo_Black({
   subsets: ["latin"],
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+});
+
 export const metadata = {
   title: "BITGIG | Expert annotation for lab & medical data",
   description:
-    "Verified lab and medical specialists annotate your data. Gemini drafts, experts correct, consensus checks every task.",
+    "Gemini drafts every segment. Verified lab experts correct it. Consensus checks every task.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${archivoBlack.variable} h-full antialiased`}
+      className={`${inter.variable} ${archivoBlack.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-          {children}
-        </main>
+        <TooltipProvider delayDuration={200}>
+          <Navbar />
+          <main className="flex flex-1 flex-col">{children}</main>
+          <Toaster position="bottom-right" />
+        </TooltipProvider>
       </body>
     </html>
   );
