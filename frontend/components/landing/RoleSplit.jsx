@@ -1,92 +1,68 @@
 "use client";
 
+import { useState } from "react";
+import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
-import Mono from "@/components/Mono";
 import Reveal from "@/components/Reveal";
 import DotGrid from "@/components/reactbits/DotGrid";
 import { useChooseRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 
-const PANELS = [
-  {
-    role: "company",
-    kicker: "For labs",
-    title: "Post a gig.",
-    stats: [
-      ["100%", "edits audit-logged"],
-      ["2+", "experts per task"],
-    ],
-    className: "bg-ink text-white",
-    kickerClass: "text-white/55",
-    arrowClass: "bg-primary text-white",
-  },
-  {
-    role: "expert",
-    kicker: "For specialists",
-    title: "Start annotating.",
-    stats: [
-      ["$12+", "per task"],
-      ["0", "blank timelines"],
-    ],
-    className: "bg-beige text-ink",
-    kickerClass: "text-ink/55",
-    arrowClass: "bg-ink text-beige",
-  },
+const SIDES = [
+  { role: "company", title: "I run a lab.", line: "Post a gig. Get expert-verified data back." },
+  { role: "expert", title: "I'm a specialist.", line: "Review Gemini's drafts. Get paid per task." },
 ];
 
-// Closing call to action over an interactive dot field, like a microplate under a lens.
+// Closing choice: two open typographic halves over an interactive dot field.
+// Hovering one side brings it forward and quiets the other.
 export default function RoleSplit() {
   const choose = useChooseRole();
+  const [hovered, setHovered] = useState(null);
 
   return (
-    <section className="relative overflow-hidden py-28">
-      <div className="absolute inset-0 opacity-90" aria-hidden>
-        <DotGrid dotSize={5} gap={22} baseColor="#dac8a3" activeColor="#d6247a" proximity={140} shockRadius={220} shockStrength={4} className="p-0" />
+    <section className="relative overflow-hidden py-36">
+      <div className="absolute inset-0" aria-hidden>
+        <DotGrid dotSize={5} gap={22} baseColor="#dac8a3" activeColor="#d6247a" proximity={150} shockRadius={220} shockStrength={4} className="p-0" />
       </div>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_95%_55%_at_50%_58%,var(--background)_50%,transparent_90%)]" aria-hidden />
 
-      <div className="relative mx-auto flex max-w-360 flex-col gap-12 px-6 lg:px-10">
+      <div className="relative mx-auto flex max-w-360 flex-col gap-20 px-6 lg:px-10">
         <Reveal>
           <h2 className="max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.95] tracking-tight">
             Which side of the bench are you on?
           </h2>
         </Reveal>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {PANELS.map((p, i) => (
-            <Reveal key={p.role} delay={i * 0.1}>
-              <button
-                type="button"
-                onClick={() => choose(p.role)}
-                className={cn(
-                  "group flex min-h-80 w-full flex-col justify-between rounded-3xl p-8 text-left shadow-float transition-transform duration-300 ease-out hover:-translate-y-1.5 sm:p-10",
-                  p.className
-                )}
-              >
-                <div className="flex items-start justify-between">
-                  <Mono className={cn("text-sm font-semibold tracking-wider uppercase", p.kickerClass)}>{p.kicker}</Mono>
-                  <span
-                    className={cn(
-                      "flex size-14 items-center justify-center rounded-full transition-transform duration-300 ease-out group-hover:rotate-45",
-                      p.arrowClass
-                    )}
-                  >
-                    <ArrowUpRight className="size-6" />
+        <div className="grid md:grid-cols-2" onMouseLeave={() => setHovered(null)}>
+          {SIDES.map((side, i) => {
+            const dimmed = hovered && hovered !== side.role;
+            return (
+              <Reveal key={side.role} delay={i * 0.12} className={cn(i === 1 && "md:border-l md:border-ink/15 md:pl-14", i === 0 && "md:pr-14")}>
+                <button
+                  type="button"
+                  onClick={() => choose(side.role)}
+                  onMouseEnter={() => setHovered(side.role)}
+                  onFocus={() => setHovered(side.role)}
+                  className={cn("group flex w-full flex-col items-start gap-5 py-6 text-left transition-opacity duration-300", dimmed && "opacity-30")}
+                >
+                  <span className="relative flex items-center gap-4">
+                    <span className="font-display text-[clamp(2.5rem,4.6vw,4.25rem)] leading-none tracking-tight transition-colors duration-300 group-hover:text-primary">
+                      {side.title}
+                    </span>
+                    <ArrowUpRight className="size-10 shrink-0 transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-primary" strokeWidth={2.5} />
+                    <motion.span
+                      className="absolute -bottom-2 left-0 h-1 w-full origin-left rounded-full bg-primary"
+                      initial={false}
+                      animate={{ scaleX: hovered === side.role ? 1 : 0 }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      aria-hidden
+                    />
                   </span>
-                </div>
-                <div className="flex flex-col gap-6">
-                  <span className="font-display text-[clamp(2.5rem,4.5vw,4rem)] leading-none tracking-tight">{p.title}</span>
-                  <div className="flex gap-10">
-                    {p.stats.map(([value, label]) => (
-                      <div key={label} className="flex flex-col">
-                        <Mono className="text-2xl font-semibold">{value}</Mono>
-                        <span className={cn("text-sm", p.kickerClass)}>{label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </button>
-            </Reveal>
-          ))}
+                  <span className="text-xl text-muted-foreground">{side.line}</span>
+                </button>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>
